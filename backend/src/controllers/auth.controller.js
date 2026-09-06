@@ -2,6 +2,7 @@ import userModel from "../model/user.model.js";
 import bcryptjs from "bcryptjs"
 import jwt from "jsonwebtoken";
 import "dotenv/config"
+import crypto from "crypto";
 import { sendEmails } from "../config/sendEmails.js";
 
 
@@ -175,7 +176,7 @@ export const resendOTP = async (req, res) => {
 
     existingUser.otp = hashOTP;
 
-    existingUser.otpExpire = new Date(Date.now() + 5 * 60 * 1000)
+    existingUser.otpExpire = new Date(Date.now() + 5 * 60 * 1000).toString()
 
     await existingUser.save();
 
@@ -183,7 +184,7 @@ export const resendOTP = async (req, res) => {
         from: process.env.EMAIL_USER,
         to: email,
         subject: "Al Hafiz Online - Email Verification",
-     html: `<div style=" max-width: 500px; margin: auto; padding: 30px; font-family: Arial, sans-serif; text-align: center; border: 1px solid #eee; border-radius: 12px;">
+        html: `<div style=" max-width: 500px; margin: auto; padding: 30px; font-family: Arial, sans-serif; text-align: center; border: 1px solid #eee; border-radius: 12px;">
             <h2 style="margin-bottom: 10px;"> Welcome ${existingUser.name}</h2>
             <p>Your verification code is:</p>
             <div style="font-size: 32px; font-weight: bold; letter-spacing: 8px; margin: 25px 0; ">
@@ -260,12 +261,15 @@ export const login = async (req, res) => {
 
         return res.status(200).json({
             success: true,
-            message: "signIn successfully"
+            message: "logIn successfully",
+            user: {
+                role: user.role
+            }
         })
     } catch (error) {
         return res.status(500).json({
             success: false,
-            message: "internal server error"
+            message: "internal server error",
         })
 
     }
@@ -304,25 +308,174 @@ export const userProfile = async (req, res) => {
 
 
 export const updateProfile = async (req, res) => {
-  try {
-    const { name, email } = req.body;
+    try {
+        const { name, email } = req.body;
 
-    const existingUser = await userModel.findById(req.user._id);
+        const existingUser = await userModel.findById(req.user._id);
 
-    existingUser.name = name;
-    existingUser.email = email;
+        existingUser.name = name;
+        existingUser.email = email;
 
-    await existingUser.save();
+        await existingUser.save();
 
-    res.status(200).json({
-      success: true,
-      message: "Profile updated successfully",
-      existingUser,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Profile update failed",
-    });
-  }
+        res.status(200).json({
+            success: true,
+            message: "Profile updated successfully",
+            existingUser,
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Profile update failed",
+        });
+    }
+};
+
+
+export const forgotPassword = async (req, res) => {
+    try {
+        const { email } = req.body;
+
+        if (!email) {
+            return res.status(201).json({
+                success: false,
+                message: "eamil is required"
+            })
+        }
+
+        const existingUser = await userModel.findOne({ email })
+        if (!existingUser) {
+            return res.status(401).json({
+                success: false,
+                message: "user not found"
+            })
+        }
+
+        //  Generate random reset token
+        const resetPasswordToken = crypto.randomBytes(26).toString("hex")
+
+        const hashToken = crypto.createHash("sha256").update(resetPasswordToken).digest("hex");
+
+        existingUser.resetPasswordToken = hashToken;
+
+        existingUser.resetPasswordExpire = new Date(Date.now() + 5 * 60 * 1000).toString()
+
+
+        await existingUser.save()
+
+        const resetUrl = `http://localhost:5173/reset-password/${resetPasswordToken}`;
+
+
+        await sendEmails.sendMail({
+            from: process.env.EMAIL_USER,
+            to: email,
+            subject: "Al Hafiz Online - Reset Your Password",
+            html: `<div style="max-width: 500px; margin: auto; padding: 30px; font-family: Arial, sans-serif;
+            text-align: center; border: 1px solid #eee; border-radius: 12px; background: #f8f6ef;">
+            <h2 style=" color: #0a5c3a; margin-bottom: 20px;">Reset Your Password </h2>
+            <p style="color: #555;font-size: 16px;"> Dear ${existingUser.name},</p>
+          <p style="color: #555; font-size: 16px;">
+            To reset your password click on the following button:
+          </p>
+          <div style="margin: 30px 0;">
+            <a href="${resetUrl}" style=" background: #0a5c3a; color: white; padding: 14px 40px; 
+            text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px;
+             display: inline-block;">
+              Reset Password
+            </a>
+          </div>
+
+          <p style="color: #999;font-size: 14px;">This link will expire in 15 minutes.</p>
+          <p style=" color: #999; font-size: 12px; margin-top: 20px;">
+           If you didn't request this, please ignore this email.
+          </p>
+          <hr style=" border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+          <p style=" color: #aaa; font-size: 12px; ">  
+           Al Hafiz Online - Learn Quran Online
+          </p>
+        </div>`
+        });
+
+        return res.status(200).json({
+            success: true,
+            message: "Password reset link sent to your email"
+        });
+    } catch (error) {
+
+        console.log("FORGOT PASSWORD ERROR:", error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error"
+        });
+    }
+
+}
+
+
+
+export const resetPassword = async (req, res) => {
+    try {
+        //  Token URL se aa raha hai
+        const { token } = req.params;
+
+        const { password } = req.body;
+
+        if (!token) {
+            return res.status(400).json({
+                success: false,
+                message: "Reset token is required"
+            });
+        }
+
+        if (!password) {
+            return res.status(400).json({
+                success: false,
+                message: "Password is required"
+            });
+        }
+
+        //  URL wale token ko hash karo
+        const hashedToken = crypto
+            .createHash("sha256")
+            .update(token)
+            .digest("hex");
+
+        //  Token + expiry check
+        const user = await userModel.findOne({
+            resetPasswordToken: hashedToken,
+            resetPasswordExpire: { $gt: new Date() }
+        });
+
+        if (!user) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid or expired reset link"
+            });
+        }
+
+        //  New password hash
+        const hashPassword = await bcryptjs.hash(password, 8);
+
+        user.password = hashPassword;
+
+        //  Token remove after successful reset
+        user.resetPasswordToken = null;
+        user.resetPasswordExpire = null;
+
+        await user.save();
+
+        return res.status(200).json({
+            success: true,
+            message: "Password reset successfully"
+        });
+
+    } catch (error) {
+        console.log("RESET PASSWORD ERROR:", error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error"
+        });
+    }
 };

@@ -35,7 +35,7 @@ import Reports from "./AdminDashboard/adminDashboardPages/Reports";
 import PrivacyPolicy from "./common/PrivacyPolicy";
 import TermsConditions from "./common/TermsConditions";
 import { ToastContainer } from "react-toastify";
-  // AUTH Imports  
+// AUTH Imports  
 import Login from "./common/auth/Login";
 import ResetPassword from "./common/auth/ResetPassword";
 import Signup from "./common/auth/Signup";
@@ -79,14 +79,14 @@ function App() {
           <Route path="/terms-conditions" element={<TermsConditions />} />
         </Route>
 
-      
-         {/*  AUTH ROUTES  */}
+
+        {/*  AUTH ROUTES  */}
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
         <Route path="/user-profile" element={<UserProfile />} />
         <Route path="/verify-otp" element={<VerifyOtp />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
 
         {/*  DASHBOARD ROUTES  */}
         <Route path="/dashboard" element={<AdminDashboardLayout />}>
@@ -98,14 +98,14 @@ function App() {
           <Route path="reports" element={<Reports />} />
           <Route path="profile" element={<Profile />} />
           <Route path="settings" element={<Settings />} />
-          
+
           {/*  CLASS ROUTES  */}
           <Route path="classes" element={<AllClasses />} />
           <Route path="classes/:id" element={<ClassDetail />} />
         </Route>
-  <Route path="/free-trial-class" element={<FreeTrialClass />} />
+        <Route path="/free-trial-class" element={<FreeTrialClass />} />
       </Routes>
-<ToastContainer />
+      <ToastContainer />
     </BrowserRouter>
   );
 }

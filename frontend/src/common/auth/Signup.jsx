@@ -191,6 +191,7 @@ const Signup = () => {
                   placeholder="Password"
                   value={formdata.password}
                   onChange={handleChange}
+                  minLength={6}
                   className="w-full pl-11 pr-12 py-2.5 text-gray-500  rounded-xl border border-gray-200 bg-[#fafafa] outline-none focus:border-[#c9a050] focus:ring-2 focus:ring-[#c9a050]/20 transition"
                 />
 
@@ -213,6 +214,7 @@ const Signup = () => {
                   name="confirmPassword"
                   value={formdata.confirmPassword}
                   onChange={handleChange}
+                  minLength={6}
                   placeholder="Confirm Password"
                   className="w-full px-10 py-2.5 text-gray-500  rounded-xl border border-gray-200 bg-[#fafafa] outline-none focus:border-[#c9a050] focus:ring-2 focus:ring-[#c9a050]/20 transition"
                 />
@@ -246,7 +248,7 @@ const Signup = () => {
             <button
               disabled={isLoading}
               type="submit"
-              className="w-full py-2.5 rounded-xl bg-[#0a5c3a] text-white font-semibold hover:bg-[#c9a050] transition-all duration-300 shadow-lg hover:-translate-y-0.5"
+              className="w-full cursor-pointer py-2.5 rounded-xl bg-[#0a5c3a] text-white font-semibold hover:bg-[#c9a050] transition-all duration-300 shadow-lg hover:-translate-y-0.5"
             >
               {isLoading ? "Creating Account..." : "Create Account"}
 

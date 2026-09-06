@@ -1,12 +1,17 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { FaArrowLeft, FaLock } from "react-icons/fa6";
+import { useResetPasswordMutation } from "../../app/api/userApi";
 
 const ResetPassword = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+   const { token } = useParams();
+   const navigate = useNavigate();
+  
+  const [resetPassword, { isLoading, isSuccess, isError, error }] = useResetPasswordMutation();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (password !== confirmPassword) {
@@ -15,8 +20,13 @@ const ResetPassword = () => {
     }
 
     console.log("New Password:", password);
-
-    // Yahan baad mein backend reset-password API call lagegi
+  
+    try {
+      await resetPassword({ token, password }).unwrap();
+       navigate('/login')
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (
@@ -42,7 +52,7 @@ const ResetPassword = () => {
             </h2>
 
             <p className="text-gray-500 mt-3 leading-relaxed">
-Enter the code we sent to Ali123@gmail.com and pick a new password.
+              Enter the code we sent to Ali123@gmail.com and pick a new password.
             </p>
 
           </div>
@@ -64,7 +74,7 @@ Enter the code we sent to Ali123@gmail.com and pick a new password.
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                 
+
                   required
                   minLength={6}
                   className="w-full pl-2 pr-4 py-2.5 rounded-md border border-gray-200 bg-[#fafafa] outline-none focus:border-[#c9a050] focus:ring-2 focus:ring-[#c9a050]/20 transition"
@@ -83,13 +93,13 @@ Enter the code we sent to Ali123@gmail.com and pick a new password.
 
               <div className="relative">
 
-                
+
 
                 <input
                   type="password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                 
+
                   required
                   minLength={6}
                   className="w-full pl-2 pr-4 py-2.5 rounded-md border border-gray-200 bg-[#fafafa] outline-none focus:border-[#c9a050] focus:ring-2 focus:ring-[#c9a050]/20 transition"
@@ -111,16 +121,16 @@ Enter the code we sent to Ali123@gmail.com and pick a new password.
 
           {/* Back To Login */}
           <div className="text-center mt-7">
-  <p className="text-sm text-gray-500">
-    Remembered your password?{" "}
-    <Link
-      to="/login"
-      className="font-semibold text-[#0a5c3a] hover:text-[#c9a050] transition"
-    >
-      Sign in
-    </Link>
-  </p>
-</div>
+            <p className="text-sm text-gray-500">
+              Remembered your password?{" "}
+              <Link
+                to="/login"
+                className="font-semibold text-[#0a5c3a] hover:text-[#c9a050] transition"
+              >
+                Sign in
+              </Link>
+            </p>
+          </div>
 
         </div>
 

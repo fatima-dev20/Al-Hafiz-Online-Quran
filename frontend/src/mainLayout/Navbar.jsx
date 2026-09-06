@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { FaBars, FaChevronDown, FaChevronRight } from "react-icons/fa6";
+import { Link, useLocation, useNavigate } from "react-router-dom"; // 
+import { FaBars, FaChevronDown, FaChevronRight, FaUser, } from "react-icons/fa6"; // 
 import { RxCross1 } from "react-icons/rx";
-import { useMyProfileQuery } from "../app/api/userApi";
+import { useMyProfileQuery, useLogOutMutation } from "../app/api/userApi"; // 
 
 const courses = [
   {
@@ -50,11 +50,33 @@ const Navbar = () => {
   const [mobileQuranOpen, setMobileQuranOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
+  //  ACCOUNT DROPDOWN
+  const [accountOpen, setAccountOpen] = useState(false);
+
   const location = useLocation();
+
+  //  NAVIGATE
+  const navigate = useNavigate();
 
   const { data, isLoading } = useMyProfileQuery();
 
+  //  LOGOUT MUTATION
+  const [logOut] = useLogOutMutation();
+
   const user = data?.user;
+
+  //  LOGOUT FUNCTION
+  const handleLogout = async () => {
+    try {
+      await logOut().unwrap();
+
+      setAccountOpen(false);
+
+      navigate("/");
+    } catch (error) {
+      console.log("Logout error:", error);
+    }
+  };
 
   // Navbar background on scroll
   useEffect(() => {
@@ -76,22 +98,30 @@ const Navbar = () => {
     setMobileOpen(false);
     setMobileCoursesOpen(false);
     setMobileQuranOpen(false);
+
+    //  CLOSE ACCOUNT DROPDOWN
+    setAccountOpen(false);
   }, [location.pathname]);
 
   const isDarkPage =
     location.pathname.startsWith("/courses") ||
-    [ "/login", "/signup", "/forgot-password", "/fee", "/contact", "/privacy-policy", "/terms-conditions",
+    ["/login",
+      "/signup",
+      "/forgot-password",
+      "/fee",
+      "/contact",
+      "/privacy-policy",
+      "/terms-conditions",
     ].includes(location.pathname);
 
   return (
     <>
       {/* NAVBAR */}
       <nav
-        className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
-          isDarkPage || scrolled
-            ? "bg-[#0a5c3a]/95 backdrop-blur-md shadow-lg"
-            : "bg-transparent"
-        }`}
+        className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${isDarkPage || scrolled
+          ? "bg-[#0a5c3a]/95 backdrop-blur-md shadow-lg"
+          : "bg-transparent"
+          }`}
       >
         <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
 
@@ -145,9 +175,8 @@ const Navbar = () => {
                 Courses
 
                 <FaChevronDown
-                  className={`text-xs transition ${
-                    coursesOpen ? "rotate-180" : ""
-                  }`}
+                  className={`text-xs transition ${coursesOpen ? "rotate-180" : ""
+                    }`}
                 />
               </button>
 
@@ -172,11 +201,10 @@ const Navbar = () => {
                             <span>{course.name}</span>
 
                             <FaChevronRight
-                              className={`text-xs ${
-                                quranOpen
-                                  ? "text-[#c9a050]"
-                                  : "text-gray-400"
-                              }`}
+                              className={`text-xs ${quranOpen
+                                ? "text-[#c9a050]"
+                                : "text-gray-400"
+                                }`}
                             />
                           </div>
                         ) : (
@@ -225,35 +253,57 @@ const Navbar = () => {
             ))}
           </ul>
 
-          {/* ⭐ DESKTOP LOGIN / USER IMAGE */}
+          {/*  DESKTOP LOGIN / ACCOUNT */}
           <div className="hidden lg:flex items-center">
 
-            {isLoading ? (
-              // ⭐ LOADING
-              <div className="w-10 h-10 rounded-full bg-white/20 animate-pulse" />
-            ) : user ? (
-              // ⭐ LOGGED IN → USER IMAGE
-              <Link
-                to="/user-profile"
-              >
-                <img
-                  src={
-                    user.image ||
-                    `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                      user.name || "User"
-                    )}`
-                  }
-                  alt={user.name || "User Profile"}
-                  className="w-10 h-10 rounded-full object-cover border-2 border-[#c9a050] hover:scale-110 transition"
-                />
-              </Link>
+            {user ? (
+
+              //  LOGGED IN → ACCOUNT ICON
+              <div className="relative">
+
+                {/*  ACCOUNT ICON */}
+                <button
+                  onClick={() => setAccountOpen(!accountOpen)}
+                  className="w-10 h-10 cursor-pointer rounded-full bg-[#c9a050] text-white flex items-center justify-center hover:bg-[#b8942e] transition"
+                >
+                  <FaUser />
+                </button>
+
+                {/*  ACCOUNT DROPDOWN */}
+                {accountOpen && (
+                  <div className="absolute right-0 top-12 w-28 bg-white rounded-xl shadow-xl overflow-hidden">
+
+                    {/*  MY PROFILE */}
+                    <Link
+                      to="/user-profile"
+                      onClick={() => setAccountOpen(false)}
+                      className="block px-4 py-2 text-[#0a5c3a] hover:bg-[#f8f3e9]"
+                    >
+                      My Profile
+                    </Link>
+
+                    {/*  LOG OUT */}
+                    <button
+                      onClick={handleLogout}
+                      className="w-full text-left px-4 pb-2 text-red-600 hover:bg-red-50"
+                    >
+                      Log Out
+                    </button>
+
+                  </div>
+                )}
+
+              </div>
+
             ) : (
-              // ⭐ NOT LOGGED IN → LOGIN
+
+              //  NOT LOGGED IN → LOGIN
               <Link to="/login">
-                <button className="px-5 py-2.5 bg-[#c9a050] text-white rounded-full font-semibold hover:bg-[#b8942e] transition">
+                <button className="px-5 py-1.5 bg-[#c9a050] text-white rounded-full font-semibold hover:bg-[#b8942e] transition">
                   Login
                 </button>
               </Link>
+
             )}
 
           </div>
@@ -270,9 +320,8 @@ const Navbar = () => {
 
       {/* MOBILE MENU */}
       <div
-        className={`fixed top-0 right-0 h-screen w-[85%] sm:w-[380px] bg-[#0a5c3a] text-white z-[60] shadow-2xl transition-transform duration-300 ${
-          mobileOpen ? "translate-x-0" : "translate-x-full"
-        }`}
+        className={`fixed top-0 right-0 h-full w-[85%] sm:w-[380px] bg-[#0a5c3a] text-white z-[60] shadow-2xl transition-transform duration-300 ${mobileOpen ? "translate-x-0" : "translate-x-full"
+          }`}
       >
         {/* CLOSE BUTTON */}
         <button
@@ -308,7 +357,7 @@ const Navbar = () => {
         </div>
 
         {/* MOBILE LINKS */}
-        <div className="p-6 overflow-y-auto h-[calc(100vh-150px)]">
+        <div className="p-6 overflow-y-auto h-full">
 
           <div className="space-y-4">
 
@@ -318,7 +367,7 @@ const Navbar = () => {
                 key={item.name}
                 to={item.path}
                 onClick={() => setMobileOpen(false)}
-                className="block text-lg font-semibold hover:text-[#c9a050]"
+                className="block text-lg rounded-xl px-3 hover:bg-[#c9a050]/20 py-2.5 font-semibold hover:text-[#c9a050]"
               >
                 {item.name}
               </Link>
@@ -330,14 +379,13 @@ const Navbar = () => {
                 onClick={() =>
                   setMobileCoursesOpen(!mobileCoursesOpen)
                 }
-                className="w-full flex justify-between items-center text-lg font-semibold"
+                className="w-full flex hover:bg-[#c9a050]/20 py-2.5 rounded-xl px-3 justify-between items-center text-lg font-semibold"
               >
                 Courses
 
                 <FaChevronDown
-                  className={`text-sm transition ${
-                    mobileCoursesOpen ? "rotate-180" : ""
-                  }`}
+                  className={`text-sm transition ${mobileCoursesOpen ? "rotate-180" : ""
+                    }`}
                 />
               </button>
 
@@ -353,16 +401,15 @@ const Navbar = () => {
                             onClick={() =>
                               setMobileQuranOpen(!mobileQuranOpen)
                             }
-                            className="w-full flex justify-between text-left text-[#f5d48a] font-semibold"
+                            className="w-full rounded-xl px-3 hover:bg-[#c9a050]/20 py-2.5 flex justify-between text-left text-[#f5d48a] font-semibold"
                           >
                             {course.name}
 
                             <FaChevronDown
-                              className={`text-xs transition ${
-                                mobileQuranOpen
-                                  ? "rotate-180"
-                                  : ""
-                              }`}
+                              className={`text-xs transition ${mobileQuranOpen
+                                ? "rotate-180"
+                                : ""
+                                }`}
                             />
                           </button>
 
@@ -374,7 +421,7 @@ const Navbar = () => {
                                   key={subCourse.name}
                                   to={subCourse.path}
                                   onClick={() => setMobileOpen(false)}
-                                  className="block text-sm text-white/70 hover:text-[#c9a050]"
+                                  className="block text-sm text-white/70 hover:text-[#c9a050] rounded-xl px-3 hover:bg-[#c9a050]/20 py-2.5"
                                 >
                                   {subCourse.name}
                                 </Link>
@@ -387,7 +434,7 @@ const Navbar = () => {
                         <Link
                           to={course.path}
                           onClick={() => setMobileOpen(false)}
-                          className="block text-white/80 hover:text-[#c9a050]"
+                          className="block text-white/80 hover:text-[#c9a050] hover:bg-[#c9a050]/20 py-2.5 rounded-xl px-3"
                         >
                           {course.name}
                         </Link>
@@ -406,7 +453,7 @@ const Navbar = () => {
                 key={item.name}
                 to={item.path}
                 onClick={() => setMobileOpen(false)}
-                className="block text-lg font-semibold hover:text-[#c9a050]"
+                className="block text-lg font-semibold rounded-xl px-3 hover:text-[#c9a050] hover:bg-[#c9a050]/20 py-2.5"
               >
                 {item.name}
               </Link>
@@ -414,46 +461,99 @@ const Navbar = () => {
 
           </div>
 
-          {/* ⭐ MOBILE LOGIN / USER IMAGE */}
-          <div className="mt-8 pt-6 border-t border-white/10">
+         {/* ⭐ MOBILE LOGIN / ACCOUNT */}
+<div className="mt-3">
 
-            {isLoading ? (
-              // ⭐ LOADING
-              <div className="flex justify-center">
-                <div className="w-12 h-12 rounded-full bg-white/20 animate-pulse" />
-              </div>
-            ) : user ? (
-              // ⭐ LOGGED IN → USER IMAGE
-              <Link
-                to="/user-profile"
-                onClick={() => setMobileOpen(false)}
-                className="flex justify-center"
-                title={user.name || "User Profile"}
-              >
-                <img
-                  src={
-                    user.image ||
-                    `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                      user.name || "User"
-                    )}`
-                  }
-                  alt={user.name || "User Profile"}
-                  className="w-12 h-12 rounded-full object-cover border-2 border-[#c9a050] hover:scale-110 transition"
-                />
-              </Link>
-            ) : (
-              // ⭐ NOT LOGGED IN → LOGIN
-              <Link
-                to="/login"
-                onClick={() => setMobileOpen(false)}
-              >
-                <button className="w-full py-3 bg-[#c9a050] rounded-full font-semibold">
-                  Login
-                </button>
-              </Link>
-            )}
+  {isLoading ? (
 
+    <div className="flex justify-center">
+      <div className="w-10 h-10 rounded-full bg-white/20 animate-pulse" />
+    </div>
+
+  ) : user ? (
+
+    <div className="w-full">
+
+      {/* ⭐ ACCOUNT BUTTON */}
+      <button
+        onClick={() => setAccountOpen(!accountOpen)}
+        className="w-full flex items-center justify-between py-3 px-2 text-white hover:text-[#f5d48a] transition"
+      >
+
+        <div className="flex items-center gap-3">
+
+          {/* ⭐ USER ICON */}
+          <div className="w-12 h-12 rounded-full bg-[#c9a050] flex items-center justify-center">
+            <FaUser className="text-xl text-white" />
           </div>
+
+          {/* ⭐ USER NAME */}
+          <div className="text-left">
+            <p className="font-semibold ">
+              {user.name || "My Account"}
+            </p>
+
+            <p className="text-sm text-white/50">
+              Account
+            </p>
+          </div>
+
+        </div>
+
+        {/* ⭐ ARROW */}
+        <FaChevronDown
+          className={`text-xs transition-transform duration-200 ${
+            accountOpen ? "rotate-180 text-[#f5d48a]" : ""
+          }`}
+        />
+
+      </button>
+
+      {/* ⭐ DROPDOWN */}
+      {accountOpen && (
+        <div className="ml-12 mt-1 space-y-1">
+
+          {/* ⭐ MY PROFILE */}
+          <Link
+            to="/user-profile"
+            onClick={() => {
+              setAccountOpen(false);
+              setMobileOpen(false);
+            }}
+            className="block py-2.5 px-3 rounded-lg font-semibold text-md text-white/80 hover:bg-white/10 hover:text-[#f5d48a] transition"
+          >
+            My Profile
+          </Link>
+
+          {/* ⭐ LOG OUT */}
+          <button
+            onClick={handleLogout}
+            className="w-full text-left py-2.5 px-3 rounded-lg text-md font-semibold text-red-400 hover:bg-red-600/10 hover:text-red-500 transition"
+          >
+            Log Out
+          </button>
+
+        </div>
+      )}
+
+    </div>
+
+  ) : (
+
+    /* ⭐ NOT LOGGED IN */
+    <Link
+      to="/login"
+      onClick={() => setMobileOpen(false)}
+      className="block"
+    >
+      <button className="w-full py-3 bg-[#c9a050] text-white rounded-lg font-semibold hover:bg-[#b8942e] transition">
+        Login
+      </button>
+    </Link>
+
+  )}
+
+</div>
 
         </div>
       </div>

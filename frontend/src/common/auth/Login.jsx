@@ -13,40 +13,44 @@ import { toast } from "react-toastify";
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [formdata, setFormdeta] = useState({
-    email:"",
-    password:"",
+    email: "",
+    password: "",
     Remember: false
   })
 
 
   const navigate = useNavigate();
 
-  const[signIn, {isLoading, error}] = useLogInMutation();
+  const [signIn, { isLoading, error }] = useLogInMutation();
 
-  
-  
-  const handleChange = (e) =>{
-    const{name, type, checked, value} = e.target
-    setFormdeta((prev) =>({
+
+
+  const handleChange = (e) => {
+    const { name, type, checked, value } = e.target
+    setFormdeta((prev) => ({
       ...prev,
-      [name]:type === "checkbox"? checked : value
+      [name]: type === "checkbox" ? checked : value
     }))
   }
 
 
-  const handleSubmit = async(e) =>{
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-try {
-  await signIn(formdata).unwrap();
-   toast("login successfully!", { type: "success" })
-    navigate("/")
-  
-} catch (error) {
-   toast(
-  error?.data?.message || "user not login",{type:"error"})
-  
-}
+    try {
+      const result = await signIn(formdata).unwrap();
+      toast("login successfully!", { type: "success" })
+      if (result.user.role === "admin") {
+        navigate("/admin");
+      } else {
+        navigate("/");
+      }
+
+    } catch (error) {
+      toast(
+        error?.data?.message || "user not login", { type: "error" })
+
+    }
 
 
 
@@ -151,6 +155,7 @@ try {
                 onChange={handleChange}
                 name="password"
                 value={formdata.password}
+                minLength={6}
                 placeholder="Enter your password"
                 className="w-full pl-11 pr-12 py-2.5 rounded-xl border border-gray-200 text-gray-500 bg-[#fafafa] outline-none focus:border-[#c9a050] focus:ring-2 focus:ring-[#c9a050]/20 transition"
               />
@@ -193,7 +198,7 @@ try {
             {/* Login Button */}
             <button
               type="submit"
-              className="w-full py-2.5 rounded-xl bg-[#0a5c3a] text-white font-semibold hover:bg-[#c9a050] transition-all duration-300 shadow-lg hover:-translate-y-0.5"
+              className="w-full cursor-pointer py-2.5 rounded-xl bg-[#0a5c3a] text-white font-semibold hover:bg-[#c9a050] transition-all duration-300 shadow-lg hover:-translate-y-0.5"
             >
               Login
             </button>
