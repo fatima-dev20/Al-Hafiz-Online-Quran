@@ -1,9 +1,5 @@
 import React from "react";
-import {
-    FaCamera,
-    FaUser,
-    FaEnvelope,
-} from "react-icons/fa6";
+import {FaCamera,FaUser,FaEnvelope} from "react-icons/fa6";
 import { useMyProfileQuery, useUpdateProfileMutation } from "../../app/api/userApi";
 import { useState } from "react";
 import { useEffect } from "react";
@@ -46,6 +42,11 @@ const ProfileDetails = () => {
     await updateProfile(formdata).unwrap();
 
     alert("Profile updated successfully!");
+
+    setFormdata({
+         name: "",
+        email: "",
+    })
   } catch (error) {
     console.log(error);
     alert("Profile update failed");
@@ -55,75 +56,6 @@ const ProfileDetails = () => {
 
     return (
         <>
-            {/* Personalization */}
-            <section className="bg-white rounded-3xl shadow-lg border border-gray-100 p-6 sm:p-8">
-
-                <div className="flex items-center gap-3 mb-7">
-
-                    <div className="w-11 h-11 rounded-xl bg-[#0a5c3a]/10 flex items-center justify-center">
-                        <FaUser className="text-[#0a5c3a]" />
-                    </div>
-
-                    <div>
-                        <h2 className="text-xl font-bold text-[#0a5c3a]">
-                            Personalization
-                        </h2>
-
-                        <p className="text-sm text-gray-500">
-                            Customize your profile
-                        </p>
-                    </div>
-
-                </div>
-
-                {/* Profile Picture */}
-                <div className="flex flex-col sm:flex-row items-center gap-6">
-
-                    <div className="relative">
-
-                        <div className="w-28 h-28 rounded-full bg-[#f8f6ef] border-2 border-[#c9a050] flex items-center justify-center overflow-hidden">
-
-                            <FaUser className="text-5xl text-[#0a5c3a]" />
-
-                        </div>
-
-                        <button
-                            type="button"
-                            className="absolute bottom-0 right-0 w-9 h-9 rounded-full bg-[#0a5c3a] text-white flex items-center justify-center shadow-md hover:bg-[#c9a050] transition"
-                        >
-                            <FaCamera className="text-sm" />
-                        </button>
-
-                    </div>
-
-                    <div className="text-center sm:text-left">
-
-                        <h3 className="font-bold text-gray-800">
-                            Profile Picture
-                        </h3>
-
-                        <p className="text-sm text-gray-500 mt-1">
-                            Max 5 MB
-                        </p>
-
-                        <p className="text-sm text-gray-500">
-                            Only JPEG, JPG, PNG
-                        </p>
-
-                        <button
-                            type="button"
-                            className="mt-3 px-5 py-2.5 rounded-xl bg-[#0a5c3a] text-white text-sm font-semibold hover:bg-[#c9a050] transition"
-                        >
-                            Upload Picture
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </section>
-
-
             {/* Edit Details */}
             <section className="bg-white rounded-3xl shadow-lg border border-gray-100 p-6 sm:p-8">
 

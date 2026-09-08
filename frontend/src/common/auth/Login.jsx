@@ -155,7 +155,7 @@ const Login = () => {
                 onChange={handleChange}
                 name="password"
                 value={formdata.password}
-                minLength={6}
+                minLength={8}
                 placeholder="Enter your password"
                 className="w-full pl-11 pr-12 py-2.5 rounded-xl border border-gray-200 text-gray-500 bg-[#fafafa] outline-none focus:border-[#c9a050] focus:ring-2 focus:ring-[#c9a050]/20 transition"
               />

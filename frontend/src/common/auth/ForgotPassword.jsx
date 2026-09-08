@@ -16,7 +16,6 @@ const ForgotPassword = () => {
       //  Email backend ko bhej rahe hain
       await forgotPassword({ email }).unwrap();
 
-      //  Agar email successfully send ho gayi
       setEmailSent(true);
 
     } catch (error) {

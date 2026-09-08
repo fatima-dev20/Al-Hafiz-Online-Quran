@@ -20,7 +20,7 @@ app.use(cors({
 }));
 app.use(urlencoded({extended:true}))
 
-
+app.use("/uploads", express.static("uploads"));
 app.use("/api/v1/user", authRoutes)
 
 

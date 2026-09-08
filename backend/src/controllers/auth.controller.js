@@ -436,18 +436,13 @@ export const resetPassword = async (req, res) => {
         }
 
         //  URL wale token ko hash karo
-        const hashedToken = crypto
-            .createHash("sha256")
-            .update(token)
-            .digest("hex");
+        const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
 
         //  Token + expiry check
-        const user = await userModel.findOne({
-            resetPasswordToken: hashedToken,
-            resetPasswordExpire: { $gt: new Date() }
-        });
+        const existingUser = await userModel.findOne({resetPasswordToken: hashedToken,
+            resetPasswordExpire: { $gt: new Date() }});
 
-        if (!user) {
+        if (!existingUser) {
             return res.status(400).json({
                 success: false,
                 message: "Invalid or expired reset link"
@@ -457,13 +452,13 @@ export const resetPassword = async (req, res) => {
         //  New password hash
         const hashPassword = await bcryptjs.hash(password, 8);
 
-        user.password = hashPassword;
+        existingUser.password = hashPassword;
 
         //  Token remove after successful reset
-        user.resetPasswordToken = null;
-        user.resetPasswordExpire = null;
+        existingUser.resetPasswordToken = null;
+        existingUser.resetPasswordExpire = null;
 
-        await user.save();
+        await existingUser.save();
 
         return res.status(200).json({
             success: true,
@@ -476,6 +471,105 @@ export const resetPassword = async (req, res) => {
         return res.status(500).json({
             success: false,
             message: "Internal server error"
+        });
+    }
+};
+
+
+
+export const updateProfilePassword = async(req,res) =>{
+    const{currentPassword, newPassword} = req.body;
+
+      if (!currentPassword || !newPassword) {
+            return res.status(400).json({
+                success: false,
+                message: "Current password and new password are required"
+            });
+        }
+
+
+        const existingUser = await userModel.findById(req.user._id)
+          if (!existingUser) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            });
+        }
+
+        const isMatch = await bcryptjs.compare(currentPassword,existingUser.password);
+
+         if (!isMatch) {
+            return res.status(401).json({
+                success: false,
+                message: "Current password is incorrect"
+            });
+        }
+         const isSamePassword = await bcryptjs.compare(newPassword,existingUser.password);
+
+        if (isSamePassword) {
+            return res.status(400).json({
+                success: false,
+                message: "New password must be different from current password"
+            });
+        }
+        const hashPassword = await bcryptjs.hash(
+            newPassword,
+            8
+        );
+
+        // Update password
+        existingUser.password = hashPassword;
+
+        await existingUser.save();
+
+        return res.status(200).json({
+            success: true,
+            message: "Password changed successfully"
+        });
+}
+
+
+
+export const updateProfileImage = async (req, res) => {
+
+    try {
+
+        if (!req.file) {
+            return res.status(400).json({
+                success: false,
+                message: "Please select an image"
+            });
+        }
+
+
+        const existingUser = await userModel.findById(req.user._id);
+
+        if (!existingUser) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            });
+        }
+
+
+        existingUser.profileImage = `/uploads/${req.file.filename}`;
+
+        await existingUser.save();
+
+
+        return res.status(200).json({
+            success: true,
+            message: "Profile image uploaded successfully",
+            image: existingUser.profileImage
+        });
+
+    } catch (error) {
+
+        console.log("PROFILE IMAGE ERROR:", error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Image upload failed"
         });
     }
 };

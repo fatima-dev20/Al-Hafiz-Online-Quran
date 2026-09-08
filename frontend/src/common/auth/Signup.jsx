@@ -191,7 +191,7 @@ const Signup = () => {
                   placeholder="Password"
                   value={formdata.password}
                   onChange={handleChange}
-                  minLength={6}
+                  minLength={8}
                   className="w-full pl-11 pr-12 py-2.5 text-gray-500  rounded-xl border border-gray-200 bg-[#fafafa] outline-none focus:border-[#c9a050] focus:ring-2 focus:ring-[#c9a050]/20 transition"
                 />
 
@@ -214,7 +214,7 @@ const Signup = () => {
                   name="confirmPassword"
                   value={formdata.confirmPassword}
                   onChange={handleChange}
-                  minLength={6}
+                  minLength={8}
                   placeholder="Confirm Password"
                   className="w-full px-10 py-2.5 text-gray-500  rounded-xl border border-gray-200 bg-[#fafafa] outline-none focus:border-[#c9a050] focus:ring-2 focus:ring-[#c9a050]/20 transition"
                 />

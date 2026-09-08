@@ -2,6 +2,7 @@ import React from "react";
 import ProfileDetails from "./ProfileDetails";
 import UserProfilePassword from "./UserProfilePassword";
 import Logout from "./Logout";
+import ProfileImageUpload from "./ProfileImageUpload";
 
 const UserProfile = () => {
   return (
@@ -27,6 +28,8 @@ const UserProfile = () => {
         </div>
 
         <div className="space-y-6">
+
+          <ProfileImageUpload/>
 
           <ProfileDetails />
 

@@ -134,11 +134,11 @@ const Navbar = () => {
             />
 
             <div>
-              <h2 className="text-white font-bold text-lg">
+              <h2 className="text-[#19bd79] font-bold text-lg">
                 Al Hafiz-Online
               </h2>
 
-              <p className="text-white/60 text-xs">
+              <p className="text-white text-xs">
                 Learn Quran Online
               </p>
             </div>

@@ -45,8 +45,8 @@ export const authApi = createApi({
          })
       }),
 
-      
-       forgotPassword: builder.mutation({
+
+      forgotPassword: builder.mutation({
          query: (credentials) => ({
             url: "/forgot-password",
             method: "POST",
@@ -54,14 +54,14 @@ export const authApi = createApi({
          })
       }),
 
- resetPassword: builder.mutation({
-      query: ({ token, password }) => ({
-        url: `/reset-password/${token}`,
-        method: 'PUT',
-        body: { password },
+      resetPassword: builder.mutation({
+         query: ({ token, password }) => ({
+            url: `/reset-password/${token}`,
+            method: 'PUT',
+            body: { password },
+         }),
       }),
-    }),
-  
+
 
       logOut: builder.mutation({
          query: () => ({
@@ -70,6 +70,8 @@ export const authApi = createApi({
          }),
          invalidatesTags: ["Profile"]
       }),
+
+
       myProfile: builder.query({
          query: () => ({
             url: "/user-profile",
@@ -77,6 +79,8 @@ export const authApi = createApi({
          }),
          providesTags: ["Profile"]
       }),
+
+
       updateProfile: builder.mutation({
          query: (credentials) => ({
             url: "/user-profile",
@@ -86,9 +90,29 @@ export const authApi = createApi({
       }),
 
 
+      updateProfilePassword: builder.mutation({
+         query: (credentials) => ({
+            url: "/profile/password",
+            method: "PUT",
+            body: credentials
+         })
+      }),
+
+
+
+      updateProfileImage: builder.mutation({
+   query: (formData) => ({
+      url: "/profile/image",
+      method: "PUT",
+      body: formData
+   })
+}),
+
+
    })
 })
 
-export const { useSignUpMutation, useOtpVerifyMutation, useOtpResendMutation, useLogInMutation, useLogOutMutation, useMyProfileQuery,
-   useUpdateProfileMutation, useForgotPasswordMutation, useResetPasswordMutation
+export const { useSignUpMutation, useOtpVerifyMutation, useOtpResendMutation, useLogInMutation, useLogOutMutation, 
+   useMyProfileQuery,useUpdateProfileMutation, useForgotPasswordMutation, useResetPasswordMutation,
+    useUpdateProfilePasswordMutation, useUpdateProfileImageMutation
 } = authApi;
