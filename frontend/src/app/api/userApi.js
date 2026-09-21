@@ -86,13 +86,14 @@ export const authApi = createApi({
             url: "/user-profile",
             method: "PUT",
             body: credentials
-         })
+         }),
+          invalidatesTags: ["Profile"]
       }),
 
 
       updateProfilePassword: builder.mutation({
          query: (credentials) => ({
-            url: "/user-profile",
+            url: "/user-profile/password",
             method: "PUT",
             body: credentials
          })
@@ -102,7 +103,7 @@ export const authApi = createApi({
 
       updateProfileImage: builder.mutation({
          query: (formData) => ({
-            url: "/user-profile",
+            url: "/user-profile/image",
             method: "PUT",
             body: formData
          }),
@@ -112,7 +113,7 @@ export const authApi = createApi({
 
        removeProfileImage: builder.mutation({
          query: () => ({
-            url: "/user-profile",
+            url: "/user-profile/image",
             method: "DELETE"
          }),
          invalidatesTags: ["Profile"]

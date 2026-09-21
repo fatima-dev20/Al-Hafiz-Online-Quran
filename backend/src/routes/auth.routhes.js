@@ -15,10 +15,12 @@ authRoutes.post('/forgot-password', forgotPassword);
 authRoutes.put('/reset-password/:token', resetPassword);
 authRoutes.post("/logout", logOut);
 authRoutes.get("/user-profile", authMiddleware, userProfile)
-authRoutes.put("/user-profile",authMiddleware,upload.single("image"),updateProfileImage);
-authRoutes.delete("/user-profile", authMiddleware, removeProfileImage);
+authRoutes.put("/user-profile/image", authMiddleware, upload.single("image"), updateProfileImage);
 authRoutes.put("/user-profile", authMiddleware, updateProfile);
-authRoutes.put("/user-profile", authMiddleware, updateProfilePassword);
+authRoutes.put("/user-profile/password", authMiddleware, updateProfilePassword);
+authRoutes.delete("/user-profile/image", authMiddleware, removeProfileImage);
+
+
 
 
 export default authRoutes;
