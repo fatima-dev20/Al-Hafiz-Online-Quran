@@ -5,7 +5,7 @@ import { useForgotPasswordMutation } from "../../app/api/userApi";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
-  const [emailSent, setEmailSent] = useState(false); // 
+  const [emailSent, setEmailSent] = useState(false);
 
   const [forgotPassword, { isLoading }] = useForgotPasswordMutation();
 
@@ -13,11 +13,10 @@ const ForgotPassword = () => {
     e.preventDefault();
 
     try {
-      //  Email backend ko bhej rahe hain
+      // Email backend ko bhej rahe hain
       await forgotPassword({ email }).unwrap();
 
       setEmailSent(true);
-
     } catch (error) {
       console.log("Forgot password error:", error);
     }
@@ -30,7 +29,7 @@ const ForgotPassword = () => {
 
         <div className="p-8 sm:p-12 md:p-14 flex flex-col justify-center">
 
-          {/*  SUCCESS SCREEN */}
+          {/* SUCCESS SCREEN */}
           {emailSent ? (
             <div className="text-center">
 
@@ -54,11 +53,21 @@ const ForgotPassword = () => {
                 {email}
               </p>
 
+              {/* Spam / Junk Message */}
               <p className="text-sm text-gray-400 mt-5 leading-relaxed">
-                Please check your inbox and click the
+                Didn't receive the email? Please check your{" "}
                 <span className="font-semibold text-gray-600">
-                  {" "}Reset Password{" "}
-                </span>
+                  Spam 
+                </span>{" "}
+                folder.
+              </p>
+
+              {/* Reset Password Instruction */}
+              <p className="text-sm text-gray-400 mt-3 leading-relaxed">
+                Please open the email and click the{" "}
+                <span className="font-semibold text-gray-600">
+                  Reset Password
+                </span>{" "}
                 button to create a new password.
               </p>
 
@@ -73,7 +82,7 @@ const ForgotPassword = () => {
             </div>
           ) : (
 
-            /*  FORGOT PASSWORD FORM */
+            /* FORGOT PASSWORD FORM */
             <>
               {/* Heading */}
               <div className="mb-8">
