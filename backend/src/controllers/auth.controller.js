@@ -84,7 +84,7 @@ export const verifyOTP = async (req, res) => {
     const { otp, email } = req.body
 
     if (!otp || !email) {
-        return res.status().json({
+        return res.status(400).json({
             success: false,
             message: "email and OTP are required"
         })
@@ -100,7 +100,7 @@ export const verifyOTP = async (req, res) => {
 
 
     if (existingUser.isVerified) {
-        return res.status().json({
+        return res.status(400).json({
             success: false,
             message: "email already verified"
         })
@@ -108,7 +108,7 @@ export const verifyOTP = async (req, res) => {
 
     if (existingUser.otpExpire < new Date()) {
 
-        return res.status().json({
+        return res.status(400).json({
             success: false,
             message: "Otp has expired. Plz resend otp"
         })
@@ -177,7 +177,7 @@ export const resendOTP = async (req, res) => {
 
     existingUser.otp = hashOTP;
 
-    existingUser.otpExpire = new Date(Date.now() + 5 * 60 * 1000).toString()
+    existingUser.otpExpire = new Date(Date.now() + 5 * 60 * 1000)
 
     await existingUser.save();
 
@@ -225,7 +225,7 @@ export const login = async (req, res) => {
 
 
         if (!user.isVerified) {
-            return res.status().json({
+            return res.status(403).json({
                 success: false,
                 message: "Please verify your account first"
             })
@@ -314,6 +314,13 @@ export const updateProfile = async (req, res) => {
 
         const existingUser = await userModel.findById(req.user._id);
 
+        if (!existingUser) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            });
+        }
+
         existingUser.name = name;
         existingUser.email = email;
 
@@ -338,7 +345,7 @@ export const forgotPassword = async (req, res) => {
         const { email } = req.body;
 
         if (!email) {
-            return res.status(201).json({
+            return res.status(400).json({
                 success: false,
                 message: "eamil is required"
             })
@@ -359,12 +366,12 @@ export const forgotPassword = async (req, res) => {
 
         existingUser.resetPasswordToken = hashToken;
 
-        existingUser.resetPasswordExpire = new Date(Date.now() + 5 * 60 * 1000).toString()
+        existingUser.resetPasswordExpire = new Date(Date.now() + 15 * 60 * 1000)
 
 
         await existingUser.save()
 
-        const resetUrl = `http://localhost:5173/reset-password/${resetPasswordToken}`;
+        const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${resetPasswordToken}`;
 
 
         await sendEmails.sendMail({
@@ -440,8 +447,10 @@ export const resetPassword = async (req, res) => {
         const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
 
         //  Token + expiry check
-        const existingUser = await userModel.findOne({resetPasswordToken: hashedToken,
-            resetPasswordExpire: { $gt: new Date() }});
+        const existingUser = await userModel.findOne({
+            resetPasswordToken: hashedToken,
+            resetPasswordExpire: { $gt: new Date() }
+        });
 
         if (!existingUser) {
             return res.status(400).json({
@@ -478,55 +487,55 @@ export const resetPassword = async (req, res) => {
 
 
 
-export const updateProfilePassword = async(req,res) =>{
-    const{currentPassword, newPassword} = req.body;
+export const updateProfilePassword = async (req, res) => {
+    const { currentPassword, newPassword } = req.body;
 
-      if (!currentPassword || !newPassword) {
-            return res.status(400).json({
-                success: false,
-                message: "Current password and new password are required"
-            });
-        }
-
-
-        const existingUser = await userModel.findById(req.user._id)
-          if (!existingUser) {
-            return res.status(404).json({
-                success: false,
-                message: "User not found"
-            });
-        }
-
-        const isMatch = await bcryptjs.compare(currentPassword,existingUser.password);
-
-         if (!isMatch) {
-            return res.status(401).json({
-                success: false,
-                message: "Current password is incorrect"
-            });
-        }
-         const isSamePassword = await bcryptjs.compare(newPassword,existingUser.password);
-
-        if (isSamePassword) {
-            return res.status(400).json({
-                success: false,
-                message: "New password must be different from current password"
-            });
-        }
-        const hashPassword = await bcryptjs.hash(
-            newPassword,
-            8
-        );
-
-        // Update password
-        existingUser.password = hashPassword;
-
-        await existingUser.save();
-
-        return res.status(200).json({
-            success: true,
-            message: "Password changed successfully"
+    if (!currentPassword || !newPassword) {
+        return res.status(400).json({
+            success: false,
+            message: "Current password and new password are required"
         });
+    }
+
+
+    const existingUser = await userModel.findById(req.user._id)
+    if (!existingUser) {
+        return res.status(404).json({
+            success: false,
+            message: "User not found"
+        });
+    }
+
+    const isMatch = await bcryptjs.compare(currentPassword, existingUser.password);
+
+    if (!isMatch) {
+        return res.status(401).json({
+            success: false,
+            message: "Current password is incorrect"
+        });
+    }
+    const isSamePassword = await bcryptjs.compare(newPassword, existingUser.password);
+
+    if (isSamePassword) {
+        return res.status(400).json({
+            success: false,
+            message: "New password must be different from current password"
+        });
+    }
+    const hashPassword = await bcryptjs.hash(
+        newPassword,
+        8
+    );
+
+    // Update password
+    existingUser.password = hashPassword;
+
+    await existingUser.save();
+
+    return res.status(200).json({
+        success: true,
+        message: "Password changed successfully"
+    });
 }
 
 
