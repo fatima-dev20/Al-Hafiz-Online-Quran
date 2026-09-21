@@ -92,7 +92,7 @@ export const authApi = createApi({
 
       updateProfilePassword: builder.mutation({
          query: (credentials) => ({
-            url: "/profile/password",
+            url: "/user-profile",
             method: "PUT",
             body: credentials
          })
@@ -101,18 +101,28 @@ export const authApi = createApi({
 
 
       updateProfileImage: builder.mutation({
-   query: (formData) => ({
-      url: "/profile/image",
-      method: "PUT",
-      body: formData
-   })
-}),
+         query: (formData) => ({
+            url: "/user-profile",
+            method: "PUT",
+            body: formData
+         }),
+         invalidatesTags: ["Profile"]
+      }),
+
+
+       removeProfileImage: builder.mutation({
+         query: () => ({
+            url: "/user-profile",
+            method: "DELETE"
+         }),
+         invalidatesTags: ["Profile"]
+      }),
 
 
    })
 })
 
-export const { useSignUpMutation, useOtpVerifyMutation, useOtpResendMutation, useLogInMutation, useLogOutMutation, 
-   useMyProfileQuery,useUpdateProfileMutation, useForgotPasswordMutation, useResetPasswordMutation,
-    useUpdateProfilePasswordMutation, useUpdateProfileImageMutation
+export const { useSignUpMutation, useOtpVerifyMutation, useOtpResendMutation, useLogInMutation, useLogOutMutation,
+   useMyProfileQuery, useUpdateProfileMutation, useForgotPasswordMutation, useResetPasswordMutation,
+   useUpdateProfilePasswordMutation, useUpdateProfileImageMutation, useRemoveProfileImageMutation
 } = authApi;

@@ -1,18 +1,43 @@
-import React from "react";
-import {
-  FaUser,
-  FaUserTie,
-  FaPhoneAlt,
-  FaEnvelope,
-  FaGlobe,
-  FaClock,
-  FaBookOpen,
-  FaComment,
-  FaArrowRight,
-  FaShieldAlt,
+import React, { useRef, useState } from "react";
+import emailjs from "@emailjs/browser";
+import {FaUser, FaUserTie, FaPhoneAlt, FaEnvelope, FaGlobe, FaClock, FaBookOpen, FaComment, FaArrowRight, FaShieldAlt,
 } from "react-icons/fa";
+import { toast } from "react-toastify";
 
 const ContactForm = () => {
+   const ref = useRef();
+     const [loading, setLoading] = useState(false);
+   const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  setLoading(true);
+
+  try {
+    const response = await emailjs.sendForm(
+      "service_q3qzwxa",
+      "template_lgbnjpb",
+      ref.current,
+      {
+        publicKey: "CRy6jpC38o37aihaF",
+      }
+    );
+
+    console.log("EmailJS success:", response);
+
+    toast.success("Email sent successfully!");
+    ref.current.reset();
+  } catch (err) {
+    console.error("EmailJS ERROR:", err);
+    console.error("Status:", err?.status);
+    console.error("Text:", err?.text);
+
+    toast.error(err?.text || "Failed to send message. Try again!");
+  } finally {
+    setLoading(false);
+  }
+};
+
+
   return (
     <section>
       <div className="container mx-auto px-6 lg:px-20 pb-10">
@@ -27,15 +52,13 @@ const ContactForm = () => {
                 Send us <span className="text-[#c9a050]">Your Details</span>
               </h2>
 
-              {/* <div className="w-24 h-1 bg-[#c9a050] rounded-full  mt-4"></div> */}
-
               <p className="text-gray-600 mt-4 max-w-2xl ">
                 Fill in the details below and our team will contact you shortly
                 to begin your Quran learning journey.
               </p>
             </div>
 
-            <form className="space-y-5">
+            <form ref={ref} onSubmit={handleSubmit} className="space-y-5">
               
               {/* Row 1 - Name & Father Name */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -43,6 +66,8 @@ const ContactForm = () => {
                   <FaUser className="absolute left-4 top-1/2 -translate-y-1/2 text-[#c9a050] text-sm z-10" />
                   <input
                     type="text"
+                    name="user_name"
+                    required
                     placeholder="Your Name"
                     className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-300 rounded-xl text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#c9a050] focus:border-transparent transition-all duration-300"
                   />
@@ -52,6 +77,8 @@ const ContactForm = () => {
                   <FaUserTie className="absolute left-4 top-1/2 -translate-y-1/2 text-[#c9a050] text-sm z-10" />
                   <input
                     type="text"
+                    name="father_name"
+                    required
                     placeholder="Father's Name"
                     className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-300 rounded-xl text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#c9a050] focus:border-transparent transition-all duration-300"
                   />
@@ -64,6 +91,8 @@ const ContactForm = () => {
                   <FaPhoneAlt className="absolute left-4 top-1/2 -translate-y-1/2 text-[#c9a050] text-sm z-10" />
                   <input
                     type="tel"
+                    name="user_phone"
+                    required
                     placeholder="Phone Number"
                     className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-300 rounded-xl text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#c9a050] focus:border-transparent transition-all duration-300"
                   />
@@ -73,6 +102,8 @@ const ContactForm = () => {
                   <FaEnvelope className="absolute left-4 top-1/2 -translate-y-1/2 text-[#c9a050] text-sm z-10" />
                   <input
                     type="email"
+                    name="user_email"
+                    required
                     placeholder="Email Address"
                     className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-300 rounded-xl text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#c9a050] focus:border-transparent transition-all duration-300"
                   />
@@ -85,6 +116,8 @@ const ContactForm = () => {
                   <FaGlobe className="absolute left-4 top-1/2 -translate-y-1/2 text-[#c9a050] text-sm z-10" />
                   <input
                     type="text"
+                    name="user_country"
+                    required
                     placeholder="Country"
                     className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-300 rounded-xl text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#c9a050] focus:border-transparent transition-all duration-300"
                   />
@@ -94,6 +127,8 @@ const ContactForm = () => {
                   <FaClock className="absolute left-4 top-1/2 -translate-y-1/2 text-[#c9a050] text-sm z-10" />
                   <input
                     type="time"
+                    name="preferred_time"
+                    required
                     className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-300 rounded-xl text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#c9a050] focus:border-transparent transition-all duration-300"
                   />
                 </div>
@@ -103,15 +138,17 @@ const ContactForm = () => {
               <div className="relative">
                 <FaBookOpen className="absolute left-4 top-1/2 -translate-y-1/2 text-[#c9a050] text-sm z-10" />
                 <select
+                  name="selected_course"
+                  required
                   className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-300 rounded-xl text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#c9a050] focus:border-transparent transition-all duration-300 appearance-none"
                 >
                   <option value="">Select a course</option>
-                  <option value="noorani-qaida">Noorani Qaida</option>
-                  <option value="quran-reading">Quran Reading</option>
-                  <option value="tajweed">Tajweed Course</option>
-                  <option value="hifz">Quran Memorization (Hifz)</option>
-                  <option value="tafsir">Quran Tafsir</option>
-                  <option value="arabic">Arabic Language</option>
+                  <option value="Noorani Qaida">Noorani Qaida</option>
+                  <option value="Quran Reading">Quran Reading</option>
+                  <option value="Tajweed Course">Tajweed Course</option>
+                  <option value="Quran Memorization (Hifz)">Quran Memorization (Hifz)</option>
+                  <option value="Quran Tafsir">Quran Tafsir</option>
+                  <option value="Arabic Language">Arabic Language</option>
                 </select>
               </div>
 
@@ -119,6 +156,7 @@ const ContactForm = () => {
               <div className="relative">
                 <FaComment className="absolute left-4 top-4 text-[#c9a050] text-sm z-10" />
                 <textarea
+                  name="user_message"
                   rows="4"
                   placeholder="Tell us about your Quran learning goals..."
                   className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-300 rounded-xl text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#c9a050] focus:border-transparent transition-all duration-300 resize-none"
@@ -128,10 +166,11 @@ const ContactForm = () => {
               {/* Submit Button */}
               <button
                 type="submit"
-                className="w-full bg-[#0a5c3a] hover:bg-[#c9a050] text-white font-bold py-3.5 rounded-xl transition-all duration-300 transform hover:scale-[1.01] shadow-lg flex items-center justify-center gap-3 group"
+                disabled={loading}
+                className="w-full bg-[#0a5c3a] hover:bg-[#c9a050] disabled:bg-gray-400 text-white font-bold py-3.5 rounded-xl transition-all duration-300 transform hover:scale-[1.01] shadow-lg flex items-center justify-center gap-3 group"
               >
-                Start Learning Now
-                <FaArrowRight className="group-hover:translate-x-1 transition-transform duration-300" />
+                {loading ? "Sending Details..." : "Start Learning Now"}
+                {!loading && <FaArrowRight className="group-hover:translate-x-1 transition-transform duration-300" />}
               </button>
 
               {/* Security Note */}

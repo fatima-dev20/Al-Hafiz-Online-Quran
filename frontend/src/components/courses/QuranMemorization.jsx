@@ -50,18 +50,21 @@ const QuranMemorization = () => {
         <div className="relative z-10 max-w-6xl mx-auto  grid md:grid-cols-2 gap-12 items-center">
 
           <div>
-            <span className="inline-block text-[#c9a050] text-sm font-bold uppercase tracking-[3px] mb-4">
+            <span className="inline-block text-[#c9a050] text-sm font-bold uppercase tracking-[3px] mb-4"
+            data-aos="zoom-in">
               Quran Memorization Program
             </span>
 
-            <h1 className="text-4xl md:text-6xl font-bold text-white leading-tight">
+            <h1 className="text-4xl md:text-6xl font-bold text-white leading-tight"
+            data-aos="fade-up">
               Quran Memorization
               <span className="block text-[#c9a050]">
                 Ijazah Program
               </span>
             </h1>
 
-            <p className="text-[#d8e9e2] text-lg leading-8 mt-6">
+            <p className="text-[#d8e9e2] text-lg leading-8 mt-6"
+            data-aos="zoom-in">
               Memorize the Holy Quran with qualified teachers,
               personalized guidance, Tajweed excellence, and a
               structured learning system.
@@ -70,7 +73,7 @@ const QuranMemorization = () => {
             <Link
               to="/contact"
               className="inline-flex items-center gap-3 mt-8 bg-[#c9a050] text-white px-7 py-3.5 rounded-full font-semibold hover:bg-[#b89442] hover:-translate-y-1 transition-all"
-            >
+            data-aos="fade-down">
               Start Free Trial
               <FaArrowRight />
             </Link>

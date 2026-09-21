@@ -29,33 +29,35 @@ const NoraniQaida = () => {
     <div className=" bg-[#f8faf9]  overflow-hidden">
 
       {/*  HERO SECTION  */}
-      <section className="relative py-8 lg:py-16 flex items-center overflow-hidden">
+      <section className="relative py-24  md:h-screen  px-6 flex items-center overflow-hidden">
         <img
           src="https://images.unsplash.com/photo-1609599006353-e629aaabfeae?auto=format&fit=crop&w=1800&q=85"
           alt="Quran learning"
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 w-full h-screen object-cover"
         />
 
         <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/30"></div>
 
         <div
-          className="relative z-10 max-w-6xl mx-auto  py-20 w-full"
-          data-aos="fade-right"
+          className="relative z-10 max-w-6xl mx-auto  md:h-screen md:pt-28 pb-0 w-full"
+         
         >
           <div className="max-w-2xl ">
 
-            <span className="inline-block bg-[#c9a050] text-white px-5 py-2 rounded-full text-sm font-semibold mb-6">
+            <span className="inline-block bg-[#c9a050] text-white px-5 py-2 rounded-full text-sm font-semibold mb-"
+             data-aos="zoom-in">
               Quran Reading Foundation
             </span>
 
-            <h1 className="text-4xl md:text-6xl font-bold text-white leading-tight mb-6">
+            <h1 className="text-4xl md:text-6xl font-bold text-white leading-tight mb-2"  data-aos="zoom-in">
               Noorani Qaida
               <span className="block text-[#d9b477]">
                 Learn Quran from the Beginning
               </span>
             </h1>
 
-            <p className="text-gray-200 text-lg md:text-xl leading-relaxed mb-8">
+            <p className="text-gray-200 text-lg md:text-xl leading-relaxed mb-8"
+             data-aos="zoom-in">
               Build a strong foundation in Quran reading by learning Arabic
               letters, pronunciation, Harakat, and essential Tajweed rules
               step by step.
@@ -63,13 +65,15 @@ const NoraniQaida = () => {
 
             <div className="flex flex-row gap-4 ">
               <Link to="/contact">
-                <button className="bg-[#007A55] hover:bg-[#c9a050] text-white px-5 lg:px-8 py-3 rounded-full font-semibold transition-all duration-300 shadow-lg hover:scale-105">
+                <button className="bg-[#007A55] hover:bg-[#c9a050] text-white px-5 lg:px-8 py-3 rounded-full font-semibold transition-all duration-300 shadow-lg hover:scale-105"
+                 data-aos="zoom-in">
                   Start Learning
                 </button>
               </Link>
 
               <a href="#course">
-                <button className="bg-white/10 backdrop-blur-md border border-white/40 text-white px-8 py-3 rounded-full font-semibold hover:bg-white hover:text-[#007A55] transition-all duration-300">
+                <button className="bg-white/10 backdrop-blur-md border border-white/40 text-white px-8 py-3 rounded-full font-semibold hover:bg-white hover:text-[#007A55] transition-all duration-300" 
+                data-aos="zoom-in">
                   Explore Course
                 </button>
               </a>

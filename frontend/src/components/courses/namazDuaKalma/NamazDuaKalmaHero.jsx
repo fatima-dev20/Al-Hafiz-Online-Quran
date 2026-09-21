@@ -4,7 +4,7 @@ import { FaDownload } from "react-icons/fa";
 
 const NamazDuaKalmaHero = () => {
   return (
-    <section className="relative py-24 flex items-center justify-center text-center overflow-hidden">
+    <section className="relative py-32 md:h-screen flex items-center justify-center text-center overflow-hidden">
       <div 
         className="absolute inset-0 transition-opacity duration-700 opacity-100"
         style={{

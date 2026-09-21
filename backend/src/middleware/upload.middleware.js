@@ -1,40 +1,18 @@
 import multer from "multer";
+import { CloudinaryStorage } from "multer-storage-cloudinary";
+import cloudinary from "../config/cloudinary.js";
 
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, "uploads/");
+const storage = new CloudinaryStorage({
+    cloudinary,
+    params: {
+        folder: "quran-academy/profile-images",
+        allowed_formats: ["jpg", "jpeg", "png"],
     },
-
-    filename: (req, file, cb) => {
-        const uniqueName =
-            Date.now() + "-" + file.originalname;
-
-        cb(null, uniqueName);
-    }
 });
-
-const fileFilter = (req, file, cb) => {
-    const allowedTypes = [
-        "image/jpeg",
-        "image/jpg",
-        "image/png"
-    ];
-
-    if (allowedTypes.includes(file.mimetype)) {
-        cb(null, true);
-    } else {
-        cb(
-            new Error("Only JPEG, JPG and PNG images are allowed"),
-            false
-        );
-    }
-};
 
 export const upload = multer({
     storage,
-    fileFilter,
-
     limits: {
-        fileSize: 5 * 1024 * 1024
-    }
+        fileSize: 5 * 1024 * 1024,
+    },
 });

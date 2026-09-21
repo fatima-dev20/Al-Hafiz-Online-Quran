@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 const AboutHeroSection = () => {
   return (
     <section
-      className="relative py-24 md:py-32 px-5 md:px-20 bg-cover bg-center overflow-hidden"
+      className="relative py-36 md:h-screen px-5 md:px-20 bg-cover bg-center overflow-hidden"
       style={{ backgroundImage: "url('/about-hero-section-img.jpg')" }}
     >
       {/* Overlay */}

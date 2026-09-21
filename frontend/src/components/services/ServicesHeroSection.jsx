@@ -21,7 +21,7 @@ const ServicesHeroSection = () => {
 
       <div className="absolute inset-0 bg-black/70"></div>
 
-      <div className="relative z-10 max-w-7xl mx-auto w-full px-6 lg:px-20 py-28">
+      <div className="relative z-10 max-w-7xl mx-auto w-full px-3 lg:px-20 py-32">
         <div className="max-w-4xl mx-auto text-center">
 
           <motion.h1
@@ -55,35 +55,35 @@ const ServicesHeroSection = () => {
 
 
           <motion.div
-  initial={{ opacity: 0, y: 30 }}
-  whileInView={{ opacity: 1, y: 0 }}
-  transition={{
-    duration: 0.7,
-    delay: 0.5,
-  }}
-  viewport={{ once: true }}
-  className="flex flex-row justify-center items-center gap-3 mt-6"
->
-  {/* Explore Services */}
-  <button
-    onClick={scrollToServices}
-    className="group w-auto min-w-[150px] sm:min-w-[190px] inline-flex items-center justify-center gap-2 px-4 sm:px-7 py-3 sm:py-3.5 rounded-full bg-[#2d7858] text-white font-semibold shadow-lg hover:bg-[#b49762] hover:-translate-y-1 transition-all duration-300"
-  >
-    Explore Services
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{
+              duration: 0.7,
+              delay: 0.5,
+            }}
+            viewport={{ once: true }}
+            className="flex flex-row justify-center items-center gap-2 mt-6"
+          >
+            {/* Explore Services */}
+            <button
+              onClick={scrollToServices}
+              className="group inline-flex items-center justify-center gap-2 px-3.5 sm:px-7 py-3 sm:py-3.5 rounded-full bg-[#2d7858] text-white font-semibold shadow-lg hover:bg-[#b49762] hover:-translate-y-1 transition-all duration-300"
+            >
+              Explore Services
 
-    <FaArrowRight className="text-sm group-hover:translate-x-1 transition-transform duration-300" />
-  </button>
+              <FaArrowRight className="text-sm group-hover:translate-x-1 transition-transform duration-300" />
+            </button>
 
-  {/* Start Learning */}
-  <Link
-    to="/contact"
-    className="group w-auto min-w-[150px] sm:min-w-[190px] inline-flex items-center justify-center gap-2 px-4 sm:px-7 py-3 sm:py-3.5 rounded-full bg-white/10 backdrop-blur-sm border-2 border-white/80 text-white font-semibold hover:bg-white hover:text-[#0a5c3a] hover:-translate-y-1 transition-all duration-300"
-  >
-    Start Learning
+            {/* Start Learning */}
+            <Link
+              to="/contact"
+              className="group inline-flex items-center justify-center gap-2 px-3.5 sm:px-7 py-3 sm:py-3.5 rounded-full bg-white/10 backdrop-blur-sm border-2 border-white/80 text-white font-semibold hover:bg-white hover:text-[#0a5c3a] hover:-translate-y-1 transition-all duration-300"
+            >
+              Start Learning
 
-    <FaArrowRight className="text-sm group-hover:translate-x-1 transition-transform duration-300" />
-  </Link>
-</motion.div>
+              <FaArrowRight className="text-sm group-hover:translate-x-1 transition-transform duration-300" />
+            </Link>
+          </motion.div>
 
         </div>
       </div>

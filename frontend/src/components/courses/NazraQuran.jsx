@@ -7,7 +7,7 @@ const NazraQuran = () => {
 
       {/* HERO */}
       <section
-        className="relative py-24 bg-cover bg-center"
+        className="relative py-32 bg-cover bg-center md:h-screen"
         style={{
           backgroundImage:
             "url('https://img.freepik.com/premium-photo/koran-holy-book-muslims-public-item-all-muslims-table_44074-502.jpg')",
@@ -16,23 +16,28 @@ const NazraQuran = () => {
         <div className="absolute inset-0 bg-black/70"></div>
 
         <div className="relative z-10 text-center text-white px-6 max-w-3xl mx-auto">
-          <span className="inline-block px-5 py-2 mb-5 rounded-full bg-[#c9a050]/20 border border-[#c9a050]/50 text-[#c9a050] text-sm font-semibold">
+          <span className="inline-block px-5 py-2 mb-5 rounded-full bg-[#c9a050]/20 border border-[#c9a050]/50 text-[#c9a050] text-sm font-semibold"
+          data-aos="fade-up">
             QURAN LEARNING
           </span>
 
-          <h1 className="text-4xl md:text-6xl font-bold mb-5">
-            Learn <span className="text-[#c9a050]">Nazra Quran</span>
+          <h1 className="text-4xl md:text-6xl font-bold mb-5"
+          data-aos="zoom-in">
+            Learn Nazra Quran<span className="text-[#c9a050]">
             <br />
             with Tajweed
+            </span>
           </h1>
 
-          <p className="text-lg text-gray-200 leading-relaxed mb-8">
+          <p className="text-lg text-gray-200 leading-relaxed mb-8"
+          data-aos="fade-up">
             Learn to read the Holy Quran correctly and beautifully with
             experienced tutors and step-by-step guidance.
           </p>
 
           <Link to="/contact">
-            <button className="bg-[#c9a050] hover:bg-[#b8942e] text-white px-8 py-3 rounded-full font-semibold transition hover:scale-105">
+            <button className="bg-[#c9a050] hover:bg-[#b8942e] text-white px-8 py-3 rounded-full font-semibold transition hover:scale-105"
+            data-aos="zoom-in">
               Start Free Trial
             </button>
           </Link>

@@ -42,7 +42,11 @@ const userSchema = new mongoose.Schema({
      profileImage: {
         type: String,
         default: ""
-    }
+    },
+    profileImagePublicId: {
+    type: String,
+    default: ""
+},
 }, {
      timestamps: true
 }

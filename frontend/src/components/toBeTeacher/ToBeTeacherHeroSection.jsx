@@ -8,7 +8,7 @@ const ToBeTeacherHeroSection = () => {
 
   return (
     <section
-      className="relative py-32 bg-cover bg-center bg-no-repeat flex items-center"
+      className="relative py-40 md:h-screen bg-cover bg-center bg-no-repeat flex items-center"
       style={{ backgroundImage: "url('/teacher-hero.jpg')" }}
     >
       {/* Overlay */}

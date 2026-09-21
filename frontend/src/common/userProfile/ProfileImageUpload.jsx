@@ -1,138 +1,208 @@
-import React, { useRef, useState, useEffect } from "react";
-import { FaUser, FaCamera } from "react-icons/fa6";
-import { useUpdateProfileImageMutation } from "../../app/api/userApi";
+import React, { useRef, useState } from "react";
+import { FaCamera, FaTrash, FaUser } from "react-icons/fa6";
 
-// Image validation helper function
-const validateImage = (file) => {
-  const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
-  
-  if (!allowedTypes.includes(file.type)) {
-    return "Only JPEG, JPG and PNG images are allowed";
-  }
-  
-  if (file.size > 5 * 1024 * 1024) {
-    return "Image size must be less than 5 MB";
-  }
-  
-  return null;
-};
+import {useMyProfileQuery, useUpdateProfileImageMutation,
+   useRemoveProfileImageMutation} from "../../app/api/userApi";
 
 const ProfileImageUpload = () => {
-  const [image, setImage] = useState(null);
-  const [preview, setPreview] = useState(null);
   const fileInputRef = useRef(null);
-  
-  const [updateProfileImage, { isLoading }] = useUpdateProfileImageMutation();
 
-  // Cleanup preview URL to prevent memory leaks
-  useEffect(() => {
-    return () => {
-      if (preview) URL.revokeObjectURL(preview);
-    };
-  }, [preview]);
+  const { data } = useMyProfileQuery();
 
-  // Handle Image Selection
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
+  const [updateProfileImage, { isLoading: isUploading }] =
+    useUpdateProfileImageMutation();
 
-    // Validate file
-    const errorMessage = validateImage(file);
-    if (errorMessage) {
-      alert(errorMessage);
-      e.target.value = ""; // reset input
-      return;
-    }
+  const [removeProfileImage, { isLoading: isRemoving }] =
+    useRemoveProfileImageMutation();
 
-    // Save image & create preview
-    setImage(file);
-    setPreview(URL.createObjectURL(file));
+  const [preview, setPreview] = useState(null);
+
+  const user = data?.user;
+
+  const profileImage = preview || user?.profileImage || "";
+
+  // Open file picker
+  const handleChooseImage = () => {
+    if (isUploading || isRemoving) return;
+
+    fileInputRef.current?.click();
   };
 
-  // Handle Image Upload
-  const handleUpload = async () => {
-    if (!image) {
-      alert("Please select an image first");
+  // Upload profile image
+  const handleImageChange = async (e) => {
+    const file = e.target.files?.[0];
+
+    if (!file) return;
+
+    // Allowed image types
+    const allowedTypes = [
+      "image/jpeg",
+      "image/jpg",
+      "image/png",
+    ];
+
+    if (!allowedTypes.includes(file.type)) {
+      alert("Only JPG, JPEG and PNG images are allowed.");
+      e.target.value = "";
       return;
     }
 
+    // Maximum 5MB
+    if (file.size > 5 * 1024 * 1024) {
+      alert("Image size must be less than 5MB.");
+      e.target.value = "";
+      return;
+    }
+
+    // Local preview
+    const imageUrl = URL.createObjectURL(file);
+    setPreview(imageUrl);
+
+    // FormData
     const formData = new FormData();
-    formData.append("image", image);
+    formData.append("image", file);
 
     try {
-      const response = await updateProfileImage(formData).unwrap();
-      console.log("IMAGE UPLOAD RESPONSE:", response);
-      alert("Profile picture uploaded successfully");
-      
-      // Upload ke baad state clear karne ke liye (Optional)
-      setImage(null); 
+      await updateProfileImage(formData).unwrap();
+
+      // Preview remove
+      setPreview(null);
+
+      // Success alert
+      alert("Profile picture updated successfully!");
     } catch (error) {
-      console.error("IMAGE UPLOAD ERROR:", error);
-      alert(error?.data?.message || "Image upload failed");
+      console.error("Profile image upload error:", error);
+
+      setPreview(null);
+
+      // Error alert
+      alert(
+        error?.data?.message ||
+          "Failed to update profile image"
+      );
+    }
+
+    // Same file dobara select karne ke liye
+    e.target.value = "";
+  };
+
+  // Remove profile image
+  const handleRemoveImage = async () => {
+    try {
+      await removeProfileImage().unwrap();
+
+      setPreview(null);
+
+      // Success alert
+      alert("Profile picture removed successfully!");
+    } catch (error) {
+      console.error("Remove profile image error:", error);
+
+      // Error alert
+      alert(
+        error?.data?.message ||
+          "Failed to remove profile image"
+      );
     }
   };
 
   return (
     <section className="bg-white rounded-3xl shadow-lg border border-gray-100 p-6 sm:p-8">
       
-      {/* Header Section */}
-      <div className="flex items-center gap-3 mb-7">
-        <div className="w-11 h-11 rounded-xl bg-[#0a5c3a]/10 flex items-center justify-center">
-          <FaUser className="text-[#0a5c3a]" />
-        </div>
-        <div>
-          <h2 className="text-xl font-bold text-[#0a5c3a]">Personalization</h2>
-          <p className="text-sm text-gray-500">Customize your profile</p>
-        </div>
+      {/* Heading */}
+      <div className="mb-7">
+        <h2 className="text-xl font-bold text-[#0a5c3a]">
+          Profile Picture
+        </h2>
+
+        <p className="text-sm text-gray-500 mt-1">
+          Update your profile picture.
+        </p>
       </div>
 
-      {/* Hidden File Input */}
-      <input 
-        ref={fileInputRef} 
-        type="file" 
-        accept="image/jpeg,image/jpg,image/png" 
-        className="hidden" 
-        onChange={handleImageChange} 
-      />
-
-      {/* Profile Picture Upload Controls */}
       <div className="flex flex-col sm:flex-row items-center gap-6">
-        
-        {/* Avatar Preview & Camera Trigger */}
+
+        {/* Profile Image */}
         <div className="relative">
-          <div className="w-28 h-28 rounded-full bg-[#f8f6ef] border-2 border-[#c9a050] flex items-center justify-center overflow-hidden">
-            {preview ? (
-              <img src={preview} alt="Profile preview" className="w-full h-full object-cover" />
+
+          <div className="w-32 h-32 sm:w-36 sm:h-36 rounded-full overflow-hidden border-4 border-[#0a5c3a] bg-[#c9a050]/10 flex items-center justify-center">
+
+            {profileImage ? (
+              <img
+                src={profileImage}
+                alt="Profile"
+                className="w-full h-full object-cover"
+              />
             ) : (
-              <FaUser className="text-5xl text-[#0a5c3a]" />
+              <FaUser className="text-5xl text-[#c9a050]" />
             )}
+
           </div>
-          
-          <button 
-            type="button" 
-            onClick={() => fileInputRef.current.click()} 
-            className="absolute bottom-0 right-0 w-9 h-9 rounded-full bg-[#0a5c3a] text-white flex items-center justify-center shadow-md hover:bg-[#c9a050] transition"
+
+          {/* Camera Button */}
+          <button
+            type="button"
+            onClick={handleChooseImage}
+            disabled={isUploading || isRemoving}
+            className="absolute bottom-1 right-1 w-10 h-10 rounded-full bg-[#0a5c3a] text-white flex items-center justify-center hover:bg-[#084a2f] transition disabled:opacity-50"
+            title="Change profile picture"
           >
-            <FaCamera className="text-sm" />
+            <FaCamera />
           </button>
+
         </div>
 
-        {/* Info & Action Button */}
+        {/* Actions */}
         <div className="text-center sm:text-left">
-          <h3 className="font-bold text-gray-800">Profile Picture</h3>
-          <p className="text-sm text-gray-500 mt-1">Max 5 MB</p>
-          <p className="text-sm text-gray-500">Only JPEG, JPG, PNG</p>
 
-          <button 
-            type="button" 
-            onClick={handleUpload} 
-            disabled={isLoading || !image} 
-            className="mt-3 px-5 py-2.5 rounded-xl bg-[#0a5c3a] text-white text-sm font-semibold hover:bg-[#c9a050] transition disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {isLoading ? "Uploading..." : "Upload Picture"}
-          </button>
+          {/* Hidden File Input */}
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/jpeg,image/jpg,image/png"
+            onChange={handleImageChange}
+            className="hidden"
+          />
+
+          <div className="flex flex-wrap justify-center sm:justify-start gap-3">
+
+            {/* Change Photo */}
+            <button
+              type="button"
+              onClick={handleChooseImage}
+              disabled={isUploading || isRemoving}
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#0a5c3a] text-white font-semibold hover:bg-[#c9a050] transition disabled:opacity-50"
+            >
+              <FaCamera />
+
+              {isUploading
+                ? "Uploading..."
+                : "Change Photo"}
+            </button>
+
+            {/* Remove Photo */}
+            {user?.profileImage && (
+              <button
+                type="button"
+                onClick={handleRemoveImage}
+                disabled={isUploading || isRemoving}
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-red-200 text-red-600 font-semibold hover:bg-red-50 transition disabled:opacity-50"
+              >
+                <FaTrash />
+
+                {isRemoving
+                  ? "Removing..."
+                  : "Remove"}
+              </button>
+            )}
+
+          </div>
+
+          <p className="text-xs text-gray-400 mt-3">
+            JPG, JPEG or PNG. Maximum file size 5MB.
+          </p>
+
         </div>
-
       </div>
     </section>
   );

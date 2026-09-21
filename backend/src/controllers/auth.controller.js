@@ -1,5 +1,6 @@
 import userModel from "../model/user.model.js";
 import bcryptjs from "bcryptjs"
+import cloudinary from "../config/cloudinary.js";
 import jwt from "jsonwebtoken";
 import "dotenv/config"
 import crypto from "crypto";
@@ -530,46 +531,96 @@ export const updateProfilePassword = async(req,res) =>{
 
 
 
+// Upload / Update Profile Image
 export const updateProfileImage = async (req, res) => {
-
     try {
-
         if (!req.file) {
             return res.status(400).json({
                 success: false,
-                message: "Please select an image"
+                message: "Please select an image",
             });
         }
-
 
         const existingUser = await userModel.findById(req.user._id);
 
         if (!existingUser) {
             return res.status(404).json({
                 success: false,
-                message: "User not found"
+                message: "User not found",
             });
         }
 
+        // Delete old image when updating
+        if (existingUser.profileImagePublicId) {
+            await cloudinary.uploader.destroy(
+                existingUser.profileImagePublicId
+            );
+        }
 
-        existingUser.profileImage = `/uploads/${req.file.filename}`;
+        // Save new image
+        existingUser.profileImage = req.file.path;
+        existingUser.profileImagePublicId = req.file.filename;
 
         await existingUser.save();
 
-
         return res.status(200).json({
             success: true,
-            message: "Profile image uploaded successfully",
-            image: existingUser.profileImage
+            message: "Profile image updated successfully",
+            image: existingUser.profileImage,
         });
 
     } catch (error) {
-
-        console.log("PROFILE IMAGE ERROR:", error);
+        console.error("UPDATE PROFILE IMAGE ERROR:", error);
 
         return res.status(500).json({
             success: false,
-            message: "Image upload failed"
+            message: "Failed to update profile image",
+        });
+    }
+};
+
+
+// Remove Profile Image
+export const removeProfileImage = async (req, res) => {
+    try {
+        const existingUser = await userModel.findById(req.user._id);
+
+        if (!existingUser) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found",
+            });
+        }
+
+        if (!existingUser.profileImagePublicId) {
+            return res.status(400).json({
+                success: false,
+                message: "No profile image found",
+            });
+        }
+
+        // Delete image from Cloudinary
+        await cloudinary.uploader.destroy(
+            existingUser.profileImagePublicId
+        );
+
+        // Remove image from MongoDB
+        existingUser.profileImage = "";
+        existingUser.profileImagePublicId = "";
+
+        await existingUser.save();
+
+        return res.status(200).json({
+            success: true,
+            message: "Profile image removed successfully",
+        });
+
+    } catch (error) {
+        console.error("REMOVE PROFILE IMAGE ERROR:", error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Failed to remove profile image",
         });
     }
 };

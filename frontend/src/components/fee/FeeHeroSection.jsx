@@ -22,7 +22,7 @@ const FeeHeroSection = () => {
           whileInView={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.8 }}
         >
-          <div className="relative rounded-3xl overflow-hidden shadow-2xl">
+          <div className="relative rounded-3xl overflow-hidden mt-10 shadow-2xl">
             <img
               src="/fee-img.jpg" 
               alt="Fee Structure"

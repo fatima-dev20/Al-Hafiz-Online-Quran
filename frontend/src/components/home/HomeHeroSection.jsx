@@ -47,24 +47,24 @@ const HomeHeroSection = () => {
           disableOnInteraction: false,
         }}
         pagination={{ clickable: true }}
-        className="h-[530px] md:h-screen"
+        className="md:h-screen"
       >
         {slides.map((slide, index) => (
           <SwiperSlide key={index}>
-            <div className="relative w-full h-[530px] md:h-screen">
+            <div className="relative w-full md:h-screen py-28">
 
               {/* Background */}
               <img
                 src={slide.img}
                 alt={slide.title}
-                className="absolute inset-0 w-full h-full object-cover"
+                className="absolute inset-0 w-full h-screen  object-cover"
               />
 
               {/* Overlay */}
               <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/65 to-[#0a5c3a]/60"></div>
 
               {/* Content */}
-              <div className="relative z-10 flex items-center justify-center h-full px-6">
+              <div className="relative z-10 flex items-center justify-center h-full px-2.5">
 
                 <motion.div
                   key={slide.title}
@@ -79,7 +79,7 @@ const HomeHeroSection = () => {
                     initial={{ opacity: 0, y: -60 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.7 }}
-                    className="text-4xl md:text-6xl font-bold text-white leading-tight mb-6"
+                    className="text-5xl md:text-6xl font-bold text-white leading-tight mb-6"
                   >
                     {slide.title}
                   </motion.h1>

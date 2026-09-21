@@ -4,10 +4,10 @@ import { FaBookOpen, FaMosque, FaQuran, FaGlobe, FaArrowRight, FaCheckCircle } f
 
 const QuranTranslation = () => {
   return (
-    <div className="min-h-screen bg-[#F9F9F9] py-10">
+    <div className="min-h-screen bg-[#F9F9F9] ">
       
       {/* HERO SECTION */}
-      <section className="relative h-[90vh] flex items-center justify-center text-center overflow-hidden px-6 lg:px-20">
+      <section className="relative h-[90vh] md:h-screen flex items-center justify-center text-center overflow-hidden px-6 lg:px-20">
         <div 
           className="absolute inset-0 transition-opacity duration-700 opacity-100"
           style={{
@@ -34,7 +34,7 @@ const QuranTranslation = () => {
             Discover the true essence of the Qur'an through accurate translations, scholarly interpretations, and beautiful recitations
           </p>
           
-          <div className="flex flex-row lg:flex-wrap justify-center gap-4" data-aos="fade-up" data-aos-delay="200">
+          <div className="flex flex-row lg:flex-wrap justify-center gap-2" data-aos="fade-up" data-aos-delay="200">
             <Link to="/contact">
               <button className=" px-4 lg:px-8 py-2.5 lg:py-3.5 rounded-full text-white font-semibold shadow-md transition-all duration-300 bg-[#0E7C5A] hover:bg-[#c9a050] hover:scale-105 cursor-pointer">
                 Enroll Now
