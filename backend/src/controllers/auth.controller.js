@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 import "dotenv/config"
 import crypto from "crypto";
 import { sendEmails } from "../config/sendEmails.js";
+import teacherModel from "../model/teacher.model.js";
 
 
 
@@ -295,17 +296,40 @@ export const logOut = async (req, res) => {
 }
 
 export const userProfile = async (req, res) => {
-    console.log("my req user", req.user);
+    try {
+        const user = req.user;
 
+        // Teacher application check karo
+        const teacherApplication = await teacherModel.findOne({ user: user._id });
 
-    res.json({
-        success: true,
-        message: "my req user",
-        user: req.user
-    })
+        res.json({
+            success: true,
+            message: "my req user",
+            user: {
+                _id: user._id,
+                name: user.name,
+                email: user.email,
+                role: user.role,
+                profileImage: user.profileImage,
+                profileImagePublicId: user.profileImagePublicId,
+                isVerified: user.isVerified,
 
-
-}
+                // new fields frontend 
+                teacherStatus: teacherApplication ? teacherApplication.status : null,
+                teacherApplication: teacherApplication || null,
+                canApplyAsTeacher: !teacherApplication && user.role === "user",
+                isTeacher: user.role === "teacher",
+                isAdmin: user.role === "admin",
+            },
+        });
+    } catch (error) {
+        console.log("USER PROFILE ERROR:", error);
+        return res.status(500).json({
+            success: false,
+            message: error.message,
+        });
+    }
+};
 
 
 export const updateProfile = async (req, res) => {

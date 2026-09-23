@@ -42,6 +42,7 @@ import Signup from "./common/auth/Signup";
 import VerifyOtp from "./common/auth/VerifyOtp";
 import ForgotPassword from "./common/auth/ForgotPassword";
 import UserProfile from "./common/userProfile/UserProfile";
+import TeacherProfile from "./pages/TeacherProfile";
 
 // CLASS Imports 
 
@@ -73,7 +74,8 @@ function App() {
           <Route path="/courses/namaz-dua-kalma" element={<NamazDuaKalma />} />
           <Route path="/courses/obligatory-science" element={<ObligatoryScience />} />
           <Route path="/fee" element={<Fee />} />
-          <Route path="/teachers" element={<ToBeTeacher />} />
+          <Route path="/toBeTeacher" element={<ToBeTeacher />} />
+          <Route path="/teacher-profile" element={<TeacherProfile />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/terms-conditions" element={<TermsConditions />} />

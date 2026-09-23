@@ -4,6 +4,7 @@ import dotenv from "dotenv/config";
 import db from "./src/config/db.js";
 import authRoutes from "./src/routes/auth.routhes.js";
 import cookieParser from "cookie-parser";
+import teacherRoutes from "./src/routes/teacher.routes.js";
 
 
 const app = express();
@@ -21,6 +22,7 @@ app.use(cors({
 app.use(urlencoded({extended:true}))
 
 app.use("/api/v1/user", authRoutes)
+app.use("/api/v1/teacher", teacherRoutes);
 
 
 app.listen(PORT, () => {

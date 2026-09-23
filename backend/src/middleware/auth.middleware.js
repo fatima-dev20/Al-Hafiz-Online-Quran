@@ -36,3 +36,29 @@ export const authMiddleware = async (req, res, next) => {
         });
     }
 }
+
+
+
+
+// Admin only access
+export const adminMiddleware = (req, res, next) => {
+    if (!req.user || req.user.role !== "admin") {
+        return res.status(403).json({
+            success: false,
+            message: "Admin access only"
+        });
+    }
+    next();
+};
+
+
+// Teacher only access
+export const teacherMiddleware = (req, res, next) => {
+    if (!req.user || req.user.role !== "teacher") {
+        return res.status(403).json({
+            success: false,
+            message: "Teacher access only"
+        });
+    }
+    next();
+};

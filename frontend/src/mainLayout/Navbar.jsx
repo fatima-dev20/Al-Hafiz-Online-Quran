@@ -127,6 +127,7 @@ const Navbar = () => {
       "/fee",
       "/courses/basic-islamic-knowledge",
       "/courses/madni-qaida",
+      "/teacher-profile",
       "/contact",
       "/privacy-policy",
       "/terms-conditions",

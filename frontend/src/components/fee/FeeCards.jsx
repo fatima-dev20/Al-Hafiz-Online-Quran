@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AiOutlineStar } from "react-icons/ai";
 import { FaArrowRight } from "react-icons/fa";
 import { BsCheckLg } from "react-icons/bs";
 
 const FeeCards = () => {
   const [billing, setBilling] = useState("monthly");
+  const navigate = useNavigate();
 
   const plans = [
     {
@@ -79,22 +80,20 @@ const FeeCards = () => {
           <div className="bg-white shadow-lg rounded-full p-1 flex">
             <button
               onClick={() => setBilling("monthly")}
-              className={`px-8 py-3 rounded-full font-semibold transition-all duration-300 ${
-                billing === "monthly"
+              className={`px-8 py-3 rounded-full font-semibold transition-all duration-300 ${billing === "monthly"
                   ? "bg-[#0a5c3a] text-white"
                   : "text-gray-600"
-              }`}
+                }`}
             >
               Monthly
             </button>
 
             <button
               onClick={() => setBilling("yearly")}
-              className={`px-8 py-3 rounded-full font-semibold transition-all duration-300 ${
-                billing === "yearly"
+              className={`px-8 py-3 rounded-full font-semibold transition-all duration-300 ${billing === "yearly"
                   ? "bg-[#0a5c3a] text-white"
                   : "text-gray-600"
-              }`}
+                }`}
             >
               Yearly
             </button>
@@ -110,11 +109,10 @@ const FeeCards = () => {
               key={plan.id}
               whileHover={{ y: -10 }}
               transition={{ duration: 0.3 }}
-              className={`relative rounded-3xl overflow-hidden transition-all duration-300 ${
-                plan.popular
+              className={`relative rounded-3xl overflow-hidden transition-all duration-300 ${plan.popular
                   ? "bg-[#0a5c3a] text-white shadow-2xl lg:-translate-y-4"
                   : "bg-white shadow-xl hover:shadow-2xl"
-              }`}
+                }`}
             >
 
               {/* Popular */}
@@ -129,9 +127,8 @@ const FeeCards = () => {
               <div className="p-8 text-center border-b border-white/10">
 
                 <h3
-                  className={`text-3xl font-bold ${
-                    plan.popular ? "text-white" : "text-[#0a5c3a]"
-                  }`}
+                  className={`text-3xl font-bold ${plan.popular ? "text-white" : "text-[#0a5c3a]"
+                    }`}
                 >
                   {plan.title}
                 </h3>
@@ -142,18 +139,16 @@ const FeeCards = () => {
                   </span>
 
                   <span
-                    className={`text-lg ${
-                      plan.popular ? "text-gray-300" : "text-gray-500"
-                    }`}
+                    className={`text-lg ${plan.popular ? "text-gray-300" : "text-gray-500"
+                      }`}
                   >
                     /{billing}
                   </span>
                 </div>
 
                 <p
-                  className={`mt-4 ${
-                    plan.popular ? "text-gray-300" : "text-gray-500"
-                  }`}
+                  className={`mt-4 ${plan.popular ? "text-gray-300" : "text-gray-500"
+                    }`}
                 >
                   Perfect for Quran learners
                 </p>
@@ -172,27 +167,24 @@ const FeeCards = () => {
                       className="flex items-center gap-3"
                     >
                       <div
-                        className={`w-7 h-7 rounded-full flex items-center justify-center ${
-                          plan.popular
+                        className={`w-7 h-7 rounded-full flex items-center justify-center ${plan.popular
                             ? "bg-[#c9a050]"
                             : "bg-[#0a5c3a]/10"
-                        }`}
+                          }`}
                       >
                         <BsCheckLg
-                          className={`text-sm ${
-                            plan.popular
+                          className={`text-sm ${plan.popular
                               ? "text-white"
                               : "text-[#0a5c3a]"
-                          }`}
+                            }`}
                         />
                       </div>
 
                       <span
-                        className={`${
-                          plan.popular
+                        className={`${plan.popular
                             ? "text-gray-200"
                             : "text-gray-600"
-                        }`}
+                          }`}
                       >
                         {feature}
                       </span>
@@ -204,25 +196,25 @@ const FeeCards = () => {
                 </ul>
 
                 {/* Button with Link */}
-                <Link to="/contact">
-                  <button
-                    className={`w-full mt-10 py-3 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-2 group ${
-                      plan.popular
-                        ? "bg-[#c9a050] hover:bg-[#b88f35] text-white"
-                        : "bg-[#0a5c3a] hover:bg-[#08462d] text-white"
+                <button
+                  onClick={() => {
+                    const selectedPrice = billing === "monthly" ? plan.monthly : plan.yearly;
+                    navigate(`/contact?plan=${plan.title}&price=${selectedPrice}&billing=${billing}`);
+                  }}
+                  className={`w-full mt-10 py-3 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-2 group ${plan.popular
+                      ? "bg-[#c9a050] hover:bg-[#b88f35] text-white"
+                      : "bg-[#0a5c3a] hover:bg-[#08462d] text-white"
                     }`}
-                  >
-                    Choose Plan
-                    <FaArrowRight className="group-hover:translate-x-1 transition-transform duration-300" />
-                  </button>
-                </Link>
+                >
+                  Choose Plan
+                  <FaArrowRight className="group-hover:translate-x-1 transition-transform duration-300" />
+                </button>
 
                 <p
-                  className={`text-center mt-4 text-sm ${
-                    plan.popular
+                  className={`text-center mt-4 text-sm ${plan.popular
                       ? "text-gray-300"
                       : "text-gray-500"
-                  }`}
+                    }`}
                 >
                   No hidden charges • Cancel anytime
                 </p>

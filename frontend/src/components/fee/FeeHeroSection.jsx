@@ -98,17 +98,17 @@ const FeeHeroSection = () => {
           <div className="flex flex-wrap gap-4 mt-2">
             <button
               onClick={() => navigate("/contact")}
-              className="inline-flex items-center gap-3 bg-[#0a5c3a] hover:bg-[#c9a050] text-white font-semibold px-8 py-3.5 rounded-full shadow-lg transition-all duration-300 hover:scale-105 group"
+              className="inline-flex cursor-pointer items-center gap-3 bg-[#0a5c3a] hover:bg-[#c9a050] text-white font-semibold px-8 py-3.5 rounded-full shadow-lg transition-all duration-300 hover:scale-105 group"
             >
               Get Started
               <FaArrowRight className="group-hover:translate-x-1 transition-transform duration-300" />
             </button>
             
             <button
-              onClick={() => navigate("/courses")}
-              className="inline-flex items-center gap-3 bg-transparent border-2 border-[#0a5c3a] text-[#0a5c3a] hover:bg-[#0a5c3a] hover:text-white font-semibold px-8 py-3.5 rounded-full transition-all duration-300"
+              onClick={() => navigate("/services")}
+              className="inline-flex cursor-pointer items-center gap-3 bg-transparent border-2 border-[#0a5c3a] text-[#0a5c3a] hover:bg-[#0a5c3a] hover:text-white font-semibold px-8 py-3.5 rounded-full transition-all duration-300"
             >
-              View Courses
+              View Services
             </button>
           </div>
         </motion.div>
