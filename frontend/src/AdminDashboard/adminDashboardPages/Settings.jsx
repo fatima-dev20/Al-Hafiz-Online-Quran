@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { FaSave } from "react-icons/fa";
 
-import NotificationSettings from "../adminDashboardComponent/settings/NotificationSettings";
-import AppearanceSettings from "../adminDashboardComponent/settings/AppearanceSettings";
-import PreferenceSettings from "../adminDashboardComponent/settings/PreferenceSettings";
+import NotificationSettings from "../adminDashboardComponent/Settings/NotificationSettings";
+import AppearanceSettings from "../adminDashboardComponent/Settings/AppearanceSettings";
+import PreferenceSettings from "../adminDashboardComponent/Settings/PreferenceSettings";
 
 const Settings = () => {
   const [settings, setSettings] = useState({
