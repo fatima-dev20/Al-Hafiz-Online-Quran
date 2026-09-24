@@ -14,9 +14,15 @@ db();
 
 app.use(express.json());
 app.use(cookieParser());
+const allowedOrigins = [
+    "http://localhost:5173",
+    "https://al-hafiz-online-quran.vercel.app",
+    "https://al-hafiz-online-quran-git-main-fatima-s-projects-cba68d72.vercel.app"
+];
+
 app.use(cors({
-    origin: process.env.FRONTEND_URL,
-    methods: ["POST", "PUT", "DELETE", "GET"],
+    origin: allowedOrigins,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     credentials: true
 }));
 app.use(urlencoded({extended:true}))
@@ -35,7 +41,7 @@ app.get("/", (req, res) => {
       teacher: "/api/v1/teacher",
     },
      });
-}),
+});
 
 
 app.listen(PORT, () => {
