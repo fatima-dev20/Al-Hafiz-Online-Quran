@@ -3,7 +3,7 @@ import userModel from "../model/user.model.js";
 import cloudinary from "../config/cloudinary.js";
 
 
-// ==================== APPLY AS TEACHER ====================
+//  APPLY AS TEACHER 
 export const applyAsTeacher = async (req, res) => {
   try {
     const userId = req.user._id;
@@ -105,7 +105,7 @@ export const applyAsTeacher = async (req, res) => {
 };
 
 
-// ==================== GET MY APPLICATION ====================
+//  GET MY APPLICATION 
 export const getMyTeacherApplication = async (req, res) => {
   try {
     const application = await teacherModel.findOne({ user: req.user._id });
@@ -130,7 +130,7 @@ export const getMyTeacherApplication = async (req, res) => {
 };
 
 
-// ==================== UPDATE APPLICATION ====================
+//  UPDATE APPLICATION 
 export const updateTeacherApplication = async (req, res) => {
   try {
     const application = await teacherModel.findOne({ user: req.user._id });
@@ -195,7 +195,7 @@ export const updateTeacherApplication = async (req, res) => {
 };
 
 
-// ==================== ADMIN: GET ALL ====================
+//  ADMIN: GET ALL 
 export const getAllTeacherApplications = async (req, res) => {
   try {
     const { status, page = 1, limit = 10, search = "" } = req.query;
@@ -240,7 +240,7 @@ export const getAllTeacherApplications = async (req, res) => {
 };
 
 
-// ==================== ADMIN: GET SINGLE ====================
+//  ADMIN: GET SINGLE 
 export const getTeacherApplicationById = async (req, res) => {
   try {
     const application = await teacherModel
@@ -267,7 +267,7 @@ export const getTeacherApplicationById = async (req, res) => {
 };
 
 
-// ==================== ADMIN: APPROVE ====================
+//  ADMIN: APPROVE 
 export const approveTeacher = async (req, res) => {
   try {
     const application = await teacherModel.findById(req.params.id);
@@ -308,7 +308,7 @@ export const approveTeacher = async (req, res) => {
 };
 
 
-// ==================== ADMIN: REJECT ====================
+//  ADMIN: REJECT 
 export const rejectTeacher = async (req, res) => {
   try {
     const { reason } = req.body;
@@ -349,7 +349,7 @@ export const rejectTeacher = async (req, res) => {
 };
 
 
-// ==================== PUBLIC: APPROVED TEACHERS ====================
+//  PUBLIC: APPROVED TEACHERS 
 export const getAllApprovedTeachers = async (req, res) => {
   try {
     const { subject, language, page = 1, limit = 12 } = req.query;
