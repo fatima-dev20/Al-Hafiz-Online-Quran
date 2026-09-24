@@ -88,7 +88,6 @@ export const teacherApi = createApi({
 
 export const {
   useApplyAsTeacherMutation,
-  useMyTeacherApplicationQuery,
   useTeacherProfileQuery,
   useUpdateTeacherApplicationMutation,
   useAllTeacherApplicationsQuery,
