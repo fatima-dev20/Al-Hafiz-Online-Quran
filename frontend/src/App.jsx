@@ -99,7 +99,7 @@ function App() {
           <Route path="fee" element={<FeeManagement />} />
           <Route path="reports" element={<Reports />} />
           <Route path="profile" element={<Profile />} />
-          <Route path="settings" element={<Settings />} />
+          <Route path="settings" element={<Settings/>}/>
 
           {/*  CLASS ROUTES  */}
           <Route path="classes" element={<AllClasses />} />
