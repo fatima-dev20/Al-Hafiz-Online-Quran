@@ -24,6 +24,19 @@ app.use(urlencoded({extended:true}))
 app.use("/api/v1/user", authRoutes)
 app.use("/api/v1/teacher", teacherRoutes);
 
+app.get("/", (req, res) => {
+  res.json({
+    success: true,
+    message: "Al Hafiz Online Quran API",
+    version: "1.0.0",
+    status: "Running",
+    endpoints: {
+      user: "/api/v1/user",
+      teacher: "/api/v1/teacher",
+    },
+     });
+}),
+
 
 app.listen(PORT, () => {
     console.log(`Server is running on ${PORT}`);
