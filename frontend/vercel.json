@@ -3,6 +3,10 @@
     {
       "source": "/api/:path*",
       "destination": "https://al-hafiz-online-quran-2.onrender.com/api/:path*"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }
