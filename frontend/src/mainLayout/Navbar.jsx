@@ -76,6 +76,7 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   const { data, isLoading } = useMyProfileQuery();
+  console.log("PROFILE DATA:", data);
 
   const [logOut] = useLogOutMutation();
 
