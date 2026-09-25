@@ -4,7 +4,7 @@ export const teacherApi = createApi({
   reducerPath: "teacherApi",
 
   baseQuery: fetchBaseQuery({
-    baseUrl: `${import.meta.env.VITE_API_URL}/api/v1/teacher`,
+    baseUrl: "/api/v1/teacher",
     credentials: "include",
   }),
 
